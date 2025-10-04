@@ -28,11 +28,11 @@ Built with **HTML, CSS, JavaScript (Frontend)** and **PHP with MySQL (Backend)**
 - **Server**: XAMPP (for local development)  
 
 ---
-
+![Screenshot](screenshot/home_page.png)
+   ![Screenshot](screenshot/dashboard.png)
+   ![Screenshot](screenshot/report.png)
 ## ⚙️ Installation & Setup
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/personal_finance_tracker.git
-   ![Screenshot](screenshot/home_page.png)
-   ![Screenshot](screenshot/dashboard.png)
-   ![Screenshot](screenshot/report.png)
+   
