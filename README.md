@@ -33,3 +33,6 @@ Built with **HTML, CSS, JavaScript (Frontend)** and **PHP with MySQL (Backend)**
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/personal_finance_tracker.git
+   ![Screenshot](screenshot/home_page.png)
+   ![Screenshot](screenshot/dashboard.png)
+   ![Screenshot](screenshot/report.png)
