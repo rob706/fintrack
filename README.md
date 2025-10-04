@@ -28,9 +28,9 @@ Built with **HTML, CSS, JavaScript (Frontend)** and **PHP with MySQL (Backend)**
 - **Server**: XAMPP (for local development)  
 
 ---
-![Screenshot](screenshot/home_page.png)
+  ![Screenshot](screenshot/home_page.png)
    ![Screenshot](screenshot/dashboard.png)
-   ![Screenshot](screenshot/report.png)
+   ![Screenshot](screenshot/report_page.png)
 ## ⚙️ Installation & Setup
 1. Clone the repository:
    ```bash
