@@ -458,7 +458,7 @@ if (isset($_GET['delete'])) {
 
       <!-- MAIN CONTENT REMAINS EXACTLY THE SAME -->
       <div class="container">
-                <h3 class="mt-4 text-center">Add Your Daily Expenses</h3>
+                <h3 class="mt-4 text-center">Add Expenses</h3>
                 <hr>
                 <div class="row ">
 
