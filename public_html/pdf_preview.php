@@ -1,5 +1,6 @@
 <?php
-include("session.php");
+
+include ("./session.php");
 
 // Set default time period
 $period = isset($_GET['period']) ? $_GET['period'] : 'monthly';
@@ -253,8 +254,8 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
         </table>
         
         <div class="action-buttons">
-            <a href="report.php" class="btn btn-secondary">Back to Report</a>
-            <a href="pdf_preview.php?download=true&period=<?php echo $period; ?>&year=<?php echo $year; ?>&month=<?php echo $month; ?>" class="btn btn-primary">Download PDF</a>
+            <a href="/dashboard/report.htm" class="btn btn-secondary">Back to Report</a>
+            <a href="/pdf_preview.php?download=true&period=<?php echo $period; ?>&year=<?php echo $year; ?>&month=<?php echo $month; ?>" class="btn btn-primary">Download PDF</a>
         </div>
     </div>
     

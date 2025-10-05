@@ -1,0 +1,195 @@
+<?php
+
+$act = "";
+$id = 0;
+if(isset($_GET['act'])) $act=$_GET['act'];
+$expenseamount = "";
+$expensedate = date("Y-m-d");
+$expensecategory = "Entertainment";
+
+if(isset($_GET['act'])){
+  $id = $con->real_escape_string($_GET['value']);
+  $record = $con->query("SELECT * FROM expenses WHERE user_id='$userid' AND expense_id=$id");
+  if ($record->num_rows == 1) {
+      $n = $record->fetch_array();
+      $expenseamount = $n['expense'];
+      $expensedate = $n['expensedate'];
+      $expensecategory = $n['expensecategory'];
+  } else {
+      echo ("WARNING: AUTHORIZATION ERROR: Trying to Access Unauthorized data");
+  }
+}
+
+switch($act){
+
+  default:
+    $action = "Add";
+    break;
+
+  case 'edit':
+    $action = "Edit";
+    break;
+
+  case 'delete':
+    $action = "Delete";
+    break;
+}
+
+?>
+
+                <h3 class="mt-4 text-center"><?php echo $action; ?> Expenses</h3>
+                <hr>
+                <div class="row ">
+
+                    <div class="col-md-3"></div>
+
+                    <div class="col-md" style="margin:0 auto;">
+                        <form action="/core/expenses.php" method="POST" onsubmit="return validateExpenseAmount()">
+                            <div class="form-group row">
+                                <label for="expensedate" class="col-sm-6 col-form-label"><b>Date</b></label>
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control col-sm-12" value="<?php echo $expensedate; ?>" name="expensedate" id="expensedate" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="expenseamount" class="col-sm-6 col-form-label"><b>Enter Amount</b></label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control col-sm-12" value="<?php echo $expenseamount; ?>" id="expenseamount" name="expenseamount" required>
+                                </div>
+                            </div>
+                            
+                            
+                            <fieldset class="form-group">
+        <div class="row">
+            <legend class="col-form-label col-sm-6 pt-0"><b>Category</b></legend>
+            <div class="col-md">
+                <!-- Dropdown Menu -->
+                <select id="categoryDropdown" name="expensecategory" class="form-control" onchange="toggleOtherInput(this)">
+                    <option value="Electricity">Electricity</option>
+                    <option value="Rent">Rent</option>
+                    <option value="Insurance">Insurance</option>
+                    <option value="Loan">Loan</option>
+                    <option value="Gas">Gas</option>
+                    <option value="Other">Other</option>
+                </select>
+                <!-- Text Box (Hidden by Default) -->
+                <div id="otherInputContainer" class="d-none mt-2">
+                    <input type="text" id="otherInput" name="customExpenseCategory" class="form-control" placeholder="Enter custom category">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+                            <div class="form-group row">
+                                <div class="col-md-12 text-right">
+                                    <input type="hidden" name="act" value="<?php echo strtolower($action); ?>">
+                                    <input type="hidden" name="id" value="<?php echo $id; ?>">
+                                    <?php 
+                                    switch($act){
+                                        default:
+                                            ?><button type="submit" class="btn btn-lg btn-block btn-success" style="border-radius: 0%; background-color:#008080;">Add Expense</button><?php
+                                            break;
+
+                                        case 'edit':
+                                            ?><button class="btn btn-lg btn-block btn-warning" style="border-radius: 0%;" type="submit">Update</button><?php
+                                            break;
+                                        case 'delete':
+                                            ?><button class="btn btn-lg btn-block btn-danger" style="border-radius: 0%;" type="submit">Delete</button><?php
+                                            break;
+                                    } ?>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-md-3"></div>
+                    
+                </div>
+
+<script>
+    // Expense amount validation
+    function validateExpenseAmount() {
+        const amountInput = document.getElementById('expenseamount');
+        const amountValue = amountInput.value.trim();
+        
+        // Check if the value is empty
+        if (amountValue === '') {
+            alert('Please enter an amount');
+            return false;
+        }
+        
+        // Check if the value is a valid number
+        if (isNaN(amountValue)) {
+            alert('Please enter a valid number for the amount');
+            return false;
+        }
+        
+        // Check if the value is negative
+        if (parseFloat(amountValue) < 0) {
+            alert('Expense amount cannot be negative');
+            return false;
+        }
+        
+        // If all validations pass
+        return true;
+    }
+
+    // Prevent typing non-numeric characters (except decimal point)
+    document.getElementById('expenseamount').addEventListener('keypress', function(e) {
+        // Allow: backspace, delete, tab, escape, enter
+        if ([46, 8, 9, 27, 13].includes(e.keyCode) || 
+            // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+            (e.keyCode === 65 && e.ctrlKey === true) || 
+            (e.keyCode === 67 && e.ctrlKey === true) || 
+            (e.keyCode === 86 && e.ctrlKey === true) || 
+            (e.keyCode === 88 && e.ctrlKey === true) ||
+            // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+            return;
+        }
+        
+        // Ensure it's a number or decimal point
+        if ((e.keyCode < 48 || e.keyCode > 57) && e.keyCode !== 46) {
+            e.preventDefault();
+        }
+        
+        // Ensure only one decimal point
+        if (e.keyCode === 46 && this.value.indexOf('.') !== -1) {
+            e.preventDefault();
+        }
+    });
+
+    function toggleOtherInput(select) {
+        const otherInputContainer = document.getElementById('otherInputContainer');
+        const otherInput = document.getElementById('otherInput');
+
+        if (select.value === 'Other') {
+            otherInputContainer.classList.remove('d-none'); // Show the text box
+            otherInput.setAttribute("required", "true"); // Make it required
+        } else {
+            otherInputContainer.classList.add('d-none'); // Hide the text box
+            otherInput.removeAttribute("required"); // Remove required if another category is chosen
+            otherInput.value = ""; // Clear text input
+        }
+    }
+
+    function handleSubmit() {
+        const dropdown = document.getElementById('categoryDropdown');
+        const otherInput = document.getElementById('otherInput');
+
+        // If "Other" is selected and the user has entered a value
+        if (dropdown.value === "Other" && otherInput.value.trim() !== "") {
+            const newCategory = otherInput.value.trim();
+            // Add the custom category to the dropdown options
+            const newOption = document.createElement("option");
+            newOption.value = newCategory;
+            newOption.textContent = newCategory;
+            newOption.selected = true; // Select the newly added option
+            dropdown.appendChild(newOption);
+        }
+
+        console.log("Selected Category:", dropdown.value); // Debugging
+        return true; // Allow form submission
+    }
+</script>

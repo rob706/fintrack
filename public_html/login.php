@@ -1,19 +1,19 @@
 <?php
-require("../core/config.php");
+require("./core/config.php");
 session_start();
 $errormsg = "";
 if (isset($_POST['email'])) {
 
   $email = stripslashes($_REQUEST['email']);
-  $email = mysqli_real_escape_string($con, $email);
+  $email = $con->real_escape_string($email);
   $password = stripslashes($_REQUEST['password']);
-  $password = mysqli_real_escape_string($con, $password);
+  $password = $con->real_escape_string($password);
   $query = "SELECT * FROM `users` WHERE email='$email'and password='" . md5($password) . "'";
-  $result = mysqli_query($con, $query) or die(mysqli_error($con));
-  $rows = mysqli_num_rows($result);
+  $result = $con->query($query) or die($con->error);
+  $rows = $con->num_rows;
   if ($rows == 1) {
     $_SESSION['email'] = $email;
-    header("Location: dashboard.php");
+    header("Location: /dashboard/");
   } else {
     $errormsg  = "Wrong";
   }
@@ -33,7 +33,7 @@ if (isset($_POST['email'])) {
   <title>Login</title>
 
   <!-- Bootstrap core CSS -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="/core/css/bootstrap.min.css" rel="stylesheet">
   <style>
     .login-form {
       width: 340px;
@@ -116,12 +116,12 @@ if (isset($_POST['email'])) {
         
       </div>
     </form>
-    <p class="text-center">Don't have an account?<a href="register.php" class="text-danger" style="color:#ff4917"> Register Here</a></p>
+    <p class="text-center">Don't have an account?<a href="/register.htm" class="text-danger" style="color:#ff4917"> Register Here</a></p>
   </div>
 </body>
 <!-- Bootstrap core JavaScript -->
-<script src="js/jquery.slim.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<script src="/core/js/jquery.slim.min.js"></script>
+<script src="/core/js/bootstrap.min.js"></script>
 <!-- Menu Toggle Script -->
 <script>
   $("#menu-toggle").click(function(e) {

@@ -62,8 +62,8 @@
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
-      <a class="cta-btn" href="login.php">login</a>
-      <a class="cta-btn" href="register.php">register</a>
+      <a class="cta-btn" href="/login.htm">login</a>
+      <a class="cta-btn" href="/register.htm">register</a>
     </div>
   </header>
 

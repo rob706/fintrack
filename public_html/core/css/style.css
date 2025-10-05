@@ -1,289 +1,304 @@
-body {
-  background-color: #efefef;
+:root {
+      --sidebar-width: 250px;
+      --header-height: 60px;
+      --primary-color: #008080;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+    }
+    
+    /* Sidebar Styles */
+    #sidebar-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: #fff;
+      border-right: 1px solid #dee2e6;
+      z-index: 1030;
+      overflow-y: auto;
+      transition: all 0.3s;
+    }
+    
+    .sidebar-heading {
+      padding: 0.75rem 1.25rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #6c757d;
+    }
+    
+    .list-group-item {
+      border: none;
+      padding: 0.6rem 1.25rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #495057;
+    }
+    
+    .list-group-item:hover {
+      color: var(--primary-color);
+      background: #f8f9fa;
+    }
+    
+    .list-group-item .feather {
+      width: 16px;
+      height: 16px;
+      margin-right: 5px;
+      vertical-align: text-top;
+    }
+    
+    .sidebar-active {
+      color: #008080;
+      background: rgba(40, 167, 69, 0.1);
+    }
+    
+    .user {
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid #dee2e6;
+    }
+    
+    .user img {
+      width: 75px;
+      height: 75px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .user h5 {
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .user p {
+      font-size: 0.75rem;
+      color: #6c757d;
+      margin-bottom: 0;
+    }
+    
+    /* Header Styles */
+    .app-header {
+      position: fixed;
+      top: 0;
+      left: var(--sidebar-width);
+      right: 0;
+      height: var(--header-height);
+      background: #fff;
+      z-index: 1020;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+    }
+    
+    .app-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0;
+      color: #2c3e50;
+    }
+    
+    .app-title span {
+      color: #008080;
+    }
+    
+    /* Main Content Styles */
+    #page-content-wrapper {
+      margin-left: var(--sidebar-width);
+      margin-top: var(--header-height);
+      padding: 1rem;
+      width: calc(100% - var(--sidebar-width));
+      min-height: calc(100vh - var(--header-height));
+    }
+    
+    /* Card Styles */
+    .card {
+      border: none;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+    
+    .card-header {
+      padding: 0.75rem 1.25rem;
+      background: #fff;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    /* Quick Actions */
+    .quick-action {
+      text-align: center;
+      padding: 0.75rem;
+      transition: all 0.2s;
+      border-radius: 0.5rem;
+    }
+    
+    .quick-action:hover {
+      background: #f8f9fa;
+    }
+    
+    .quick-action .feather {
+      width: 20px;
+      height: 20px;
+      margin-bottom: 0.25rem;
+    }
+    
+    .quick-action p {
+      font-size: 0.75rem;
+      margin-bottom: 0;
+    }
+    
+    /* Avatar Menu */
+    .avatar-menu {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .avatar-menu-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background: white;
+      min-width: 160px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      z-index: 1;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+    
+    .avatar-menu:hover .avatar-menu-content {
+      display: block;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+      #sidebar-wrapper {
+        margin-left: -250px;
+      }
+      
+      #sidebar-wrapper.active {
+        margin-left: 0;
+      }
+      
+      #page-content-wrapper {
+        margin-left: 0;
+        width: 100%;
+      }
+      
+      .app-header {
+        left: 0;
+      }
+      
+      .app-title {
+        font-size: 0.9rem;
+      }
+      
+      /* Mobile menu toggle button */
+      .mobile-menu-toggle {
+        display: block;
+        margin-right: 0.5rem;
+      }
+    }
+    
+    @media (min-width: 992px) {
+      .mobile-menu-toggle {
+        display: none;
+      }
+    }
+    
+    /* Mobile menu toggle button */
+    .mobile-menu-toggle {
+      background: none;
+      border: none;
+      color: #495057;
+      font-size: 1.25rem;
+    }
+    
+    /* Chart container adjustments */
+    .chart-container {
+      position: relative;
+      height: 250px;
+    }
+    
+    /* Small devices (landscape phones, 576px and up) */
+    @media (max-width: 576px) {
+      .quick-action {
+        padding: 0.5rem;
+      }
+      
+      .card-header {
+        padding: 0.5rem;
+      }
+      
+      #page-content-wrapper {
+        padding: 0.5rem;
+      }
+    }
+      /* In your existing CSS, find the #sidebar-wrapper section and modify it like this: */
+#sidebar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: #2c3e50; /* Changed to dark blue-gray */
+  border-right: 1px solid #1a252f;
+  z-index: 1030;
+  overflow-y: auto;
+  transition: all 0.3s;
 }
-.feather {
-  width: 20px;
-  height: 20px;
-  stroke: #4d4d4d;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
-  vertical-align: text-bottom;
+
+/* Update the sidebar heading color */
+.sidebar-heading {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #ecf0f1; /* Light gray text */
 }
-.list-group {
-  background-color: #ffffff;
-}
+
+/* Update list items */
 .list-group-item {
   border: none;
+  padding: 0.6rem 1.25rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #bdc3c7; /* Light gray text */
+  background-color: transparent; /* Make background transparent */
 }
 
-.user {
-  text-align: center;
-  border-bottom: 1px solid #ddd;
+.list-group-item:hover {
+  color: #ffffff; /* White text on hover */
+  background: rgba(255, 255, 255, 0.1); /* Slight white overlay */
 }
-.user img {
-  padding: 10px;
-}
-.toggler {
-  color: #000;
-  background-color: #fff;
-  border: none;
-  outline: none;
-}
+
+/* Active item */
 .sidebar-active {
-  color: #008080;
-  font-weight: 500;
-}
-.sidebar-active .feather {
-  stroke: #008080;
-  font-weight: 500;
-}
-
-#wrapper {
-  overflow-x: hidden;
-  background-color: #fff;
-}
-
-#sidebar-wrapper {
-  min-height: 100vh;
-  margin-left: -15rem;
-  -webkit-transition: margin 0.25s ease-out;
-  -moz-transition: margin 0.25s ease-out;
-  -o-transition: margin 0.25s ease-out;
-  transition: margin 0.25s ease-out;
-}
-
-#sidebar-wrapper .sidebar-heading {
-  padding: 0.875rem 1.25rem;
-  font-size: 14px;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #999;
-}
-
-#sidebar-wrapper .list-group {
-  width: 15rem;
-}
-
-#page-content-wrapper {
-  min-width: 100vw;
-}
-
-#wrapper.toggled #sidebar-wrapper {
-  margin-left: 0;
-}
-
-@media (min-width: 768px) {
-  #sidebar-wrapper {
-    margin-left: 0;
-  }
-
-  #page-content-wrapper {
-    min-width: 0;
-    width: 100%;
-  }
-
-  #wrapper.toggled #sidebar-wrapper {
-    margin-left: -15rem;
-  }
-}
-
-/* Add Rounded Border to Card */
-.card {
-  margin-bottom: 10px;
-}
-.container-fluid {
-  margin-right: 20px;
-}
-/* Custom Gradients */
-.card-gradient-1 {
-  border: none;
   color: #ffffff;
-  background: #ed213a; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #93291e,
-    #ed213a
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #93291e,
-    #ed213a
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: rgba(255, 255, 255, 0.2); /* More visible active state */
 }
 
-.card-gradient-2 {
-  border: none;
-  color: #ffffff;
-  background: #e44d26; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #e44d26,
-    #f16529
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #e44d26,
-    #f16529
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+/* User section */
+.user {
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid #34495e; /* Darker border */
+  background: rgba(0, 0, 0, 0.1); /* Slightly darker background */
 }
 
-.card-gradient-3 {
-  border: none;
-  color: #ffffff;
-  background: #cc2b5e; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #753a88,
-    #cc2b5e
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #753a88,
-    #cc2b5e
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+.user h5 {
+  color: #ffffff; /* White text for username */
 }
 
-.card-gradient-4 {
-  border: none;
-  color: #ffffff;
-  background: #00b4db; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #0083b0,
-    #00b4db
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #0083b0,
-    #00b4db
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-
-.card-gradient-5 {
-  border: none;
-  color: #ffffff;
-  background: #136a8a; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #267871,
-    #136a8a
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #267871,
-    #136a8a
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-
-.card-gradient-6 {
-  border: none;
-  color: #ffffff;
-  background: #2b5876; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #4e4376,
-    #2b5876
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #4e4376,
-    #2b5876
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-
-.card-gradient-7 {
-  border: none;
-  color: #ffffff;
-  background: #6a3093; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #a044ff,
-    #6a3093
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #a044ff,
-    #6a3093
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-
-.card-gradient-8 {
-  border: none;
-  color: #ffffff;
-  background: #b24592; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #f15f79,
-    #b24592
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #f15f79,
-    #b24592
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-
-.card-gradient-9 {
-  border: none;
-  color: #ffffff;
-  background: #c94b4b; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #4b134f,
-    #c94b4b
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #4b134f,
-    #c94b4b
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-
-.card-gradient-10 {
-  border: none;
-  color: #ffffff;
-  background: #c33764; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #1d2671,
-    #c33764
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #1d2671,
-    #c33764
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-
-.card-gradient-11 {
-  border: none;
-  color: #ffffff;
-  background: #eb3349; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #f45c43,
-    #eb3349
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #f45c43,
-    #eb3349
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-.card-gradient-12 {
-  border: none;
-  color: #ffffff;
-  background: #283048; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #859398,
-    #283048
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #859398,
-    #283048
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+.user p {
+  color: #bdc3c7; /* Light gray for email */
 }

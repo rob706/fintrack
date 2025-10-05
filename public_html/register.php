@@ -1,26 +1,24 @@
 <?php
-require("../core/config.php");
+require("./core/config.php");
 if (isset($_REQUEST['firstname'])) {
   if ($_REQUEST['password'] == $_REQUEST['confirm_password']) {
     $firstname = stripslashes($_REQUEST['firstname']);
-    $firstname = mysqli_real_escape_string($con, $firstname);
+    $firstname = $con->real_escape_string($firstname);
     $lastname = stripslashes($_REQUEST['lastname']);
-    $lastname = mysqli_real_escape_string($con, $lastname);
+    $lastname = $con->real_escape_string($lastname);
 
     $email = stripslashes($_REQUEST['email']);
-    $email = mysqli_real_escape_string($con, $email);
-
+    $email = $con->real_escape_string($email);
 
     $password = stripslashes($_REQUEST['password']);
-    $password = mysqli_real_escape_string($con, $password);
-
+    $password = $con->real_escape_string($password);
 
     $trn_date = date("Y-m-d H:i:s");
 
     $query = "INSERT into `users` (firstname, lastname, password, email, trn_date) VALUES ('$firstname','$lastname', '" . md5($password) . "', '$email', '$trn_date')";
-    $result = mysqli_query($con, $query);
+    $result = $con->query($query);
     if ($result) {
-      header("Location: login.php");
+      header("Location: /login.htm");
     }
   } else {
     echo ("ERROR: Please Check Your Password & Confirmation password");
@@ -40,7 +38,7 @@ if (isset($_REQUEST['firstname'])) {
   <title>Register</title>
 
   <!-- Bootstrap core CSS -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="/core/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
       color: #000;
@@ -176,14 +174,14 @@ if (isset($_REQUEST['firstname'])) {
         <button type="submit" class="btn btn-danger btn-lg btn-block" style="border-radius:0%;background-color:#008080;">Register</button>
       </div>
     </form>
-    <div class="text-center">Already have an account? <a class="text-success" href="login.php">Login Here</a></div>
+    <div class="text-center">Already have an account? <a class="text-success" href="/login.htm">Login Here</a></div>
   </div>
 </body>
 <!-- Bootstrap core JavaScript -->
-<script src="js/jquery.slim.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<script src="/core/js/jquery.slim.min.js"></script>
+<script src="/core/js/bootstrap.min.js"></script>
 <!-- Croppie -->
-<script src="js/profile-picture.js"></script>
+<script src="/core/js/profile-picture.js"></script>
 <!-- Menu Toggle Script -->
 <script>
   $("#menu-toggle").click(function(e) {
