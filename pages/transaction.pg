@@ -34,7 +34,7 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
 
         <div class="row justify-content-center">
           <div class="col-md-8">
-            <table class="table table-hover table-bordered">
+            <table class="table table-hover table-bordered table-sm">
               <thead>
                 <tr class="text-center">
                   <th>Date</th>
