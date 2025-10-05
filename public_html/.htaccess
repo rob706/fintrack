@@ -19,10 +19,10 @@ Options -Indexes -MultiViews +FollowSymlinks
 
 ## Error Pages ##
 
-ErrorDocument 401 /error.php?error=401
-ErrorDocument 403 /error.php?error=403
-ErrorDocument 404 /error.php?error=404
-ErrorDocument 500 /error.php?error=500
+#ErrorDocument 401 /error.php?error=401
+#ErrorDocument 403 /error.php?error=403
+#ErrorDocument 404 /error.php?error=404
+#ErrorDocument 500 /error.php?error=500
 
 ####### Clean URLS #######
 
