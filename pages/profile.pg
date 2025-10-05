@@ -11,7 +11,7 @@ if (isset($_POST['save'])) {
     } else {
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($con);
     }
-    header('location: profile.php');
+    header('location: profile.htm');
 }
 
 if (isset($_POST['but_upload'])) {
