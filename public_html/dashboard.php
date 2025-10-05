@@ -41,17 +41,11 @@ $page = "../pages/".$pg.".pg";
         <a href="/dashboard" class="list-group-item list-group-item-action <?php if($pg=="dashboard") echo "sidebar-active"; ?>">
           <span data-feather="home"></span> Dashboard
         </a>
-        <a href="/dashboard/expense/add.htm" class="list-group-item list-group-item-action <?php if($pg=="manage_expense" && !isset($_GET['act'])) echo "sidebar-active"; ?>">
-          <span data-feather="plus-circle"></span> Add Expenses
+        <a href="/dashboard/transaction/add.htm" class="list-group-item list-group-item-action <?php if($pg=="manage_transaction" && !isset($_GET['act'])) echo "sidebar-active"; ?>">
+          <span data-feather="plus-circle"></span> Add Transaction
         </a>
-        <a href="/dashboard/expense.htm" class="list-group-item list-group-item-action <?php if($pg=="expense" || ($pg=="manage_expense" && isset($_GET['act']))) echo "sidebar-active"; ?>">
-          <span data-feather="edit"></span> Manage Expenses
-        </a>
-        <a href="/dashboard/income/add.htm" class="list-group-item list-group-item-action <?php if($pg=="manage_income" && !isset($_GET['act'])) echo "sidebar-active"; ?>">
-          <span data-feather="plus-circle"></span> Add Income
-        </a>
-        <a href="/dashboard/income.htm" class="list-group-item list-group-item-action <?php if($pg=="income" || ($pg=="manage_income" && isset($_GET['act']))) echo "sidebar-active"; ?>">
-          <span data-feather="edit"></span> Manage Income
+        <a href="/dashboard/transaction.htm" class="list-group-item list-group-item-action <?php if($pg=="transaction" || ($pg=="manage_transaction" && isset($_GET['act']))) echo "sidebar-active"; ?>">
+          <span data-feather="edit"></span> Manage Transactions
         </a>
         <a href="/dashboard/report.htm" class="list-group-item list-group-item-action <?php if($pg=="report") echo "sidebar-active"; ?>">
           <span data-feather="bar-chart-2"></span>Report

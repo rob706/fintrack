@@ -3,18 +3,26 @@
 $act = "";
 $id = 0;
 if(isset($_GET['act'])) $act=$_GET['act'];
-$expenseamount = "";
-$expensedate = date("Y-m-d");
-$expensecategory = "Entertainment";
+$trans_type = $trans_category = $trans_amount = "";
+$trans_date = date("Y-m-d");
 
 if(isset($_GET['act'])){
   $id = $con->real_escape_string($_GET['value']);
-  $record = $con->query("SELECT * FROM expenses WHERE user_id='$userid' AND expense_id=$id");
+  $record = $con->query("SELECT * FROM transactions WHERE user_id='$userid' AND transaction_id=$id");
   if ($record->num_rows == 1) {
       $n = $record->fetch_array();
-      $expenseamount = $n['expense'];
-      $expensedate = $n['expensedate'];
-      $expensecategory = $n['expensecategory'];
+      $trans_amount = $n['value'];
+      $trans_date = $n['date'];
+      $trans_category = $n['category'];
+      
+      if($trans_amount <= 0){
+        $trans_type = "expense";
+      }else{
+        $trans_type = "income";
+      }
+
+      if($trans_type == "expense") $trans_amount = $trans_amount *-1;
+
   } else {
       echo ("WARNING: AUTHORIZATION ERROR: Trying to Access Unauthorized data");
   }
@@ -37,49 +45,63 @@ switch($act){
 
 ?>
 
-                <h3 class="mt-4 text-center"><?php echo $action; ?> Expenses</h3>
+                <h3 class="mt-4 text-center"><?php echo $action; ?> Transaction</h3>
                 <hr>
                 <div class="row ">
 
                     <div class="col-md-3"></div>
 
                     <div class="col-md" style="margin:0 auto;">
-                        <form action="/core/expenses.php" method="POST" onsubmit="return validateExpenseAmount()">
+                        <form action="/core/transactions.php" method="POST" onsubmit="return validateTransactionAmount()">
                             <div class="form-group row">
-                                <label for="expensedate" class="col-sm-6 col-form-label"><b>Date</b></label>
+                                <label for="trans_type" class="col-sm-6 col-form-label"><b>Transaction Type</b></label>
                                 <div class="col-md-6">
-                                    <input type="date" class="form-control col-sm-12" value="<?php echo $expensedate; ?>" name="expensedate" id="expensedate" required>
+                                    <select id="trans_type" class="form-control" name="trans_type">
+                                        <option value="income" <?php if($trans_type == "income") echo "selected"; ?>>Income</option>
+                                        <option value="expense" <?php if($trans_type != "income") echo "selected"; ?>>Expense</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row">
+                                <label for="trans_date" class="col-sm-6 col-form-label"><b>Date</b></label>
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control col-sm-12" value="<?php echo $trans_date; ?>" name="trans_date" id="trans_date" required>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="expenseamount" class="col-sm-6 col-form-label"><b>Enter Amount</b></label>
+                                <label for="trans_amount" class="col-sm-6 col-form-label"><b>Enter Amount</b></label>
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control col-sm-12" value="<?php echo $expenseamount; ?>" id="expenseamount" name="expenseamount" required>
+                                    <input type="text" class="form-control col-sm-12" value="<?php echo $trans_amount; ?>" id="trans_amount" name="trans_amount" required>
                                 </div>
                             </div>
                             
-                            
-                            <fieldset class="form-group">
-        <div class="row">
-            <legend class="col-form-label col-sm-6 pt-0"><b>Category</b></legend>
-            <div class="col-md">
-                <!-- Dropdown Menu -->
-                <select id="categoryDropdown" name="expensecategory" class="form-control" onchange="toggleOtherInput(this)">
-                    <option value="Electricity">Electricity</option>
-                    <option value="Rent">Rent</option>
-                    <option value="Insurance">Insurance</option>
-                    <option value="Loan">Loan</option>
-                    <option value="Gas">Gas</option>
-                    <option value="Other">Other</option>
-                </select>
-                <!-- Text Box (Hidden by Default) -->
-                <div id="otherInputContainer" class="d-none mt-2">
-                    <input type="text" id="otherInput" name="customExpenseCategory" class="form-control" placeholder="Enter custom category">
-                </div>
-            </div>
-        </div>
-    </fieldset>
+                            <div class="form-group row">
+                                <label for="trans_amount" class="col-sm-6 col-form-label"><b>Category</b></label>
+                                <div class="col-md">
+                                    <!-- Dropdown Menu -->
+                                    <select id="categoryDropdown" name="trans_category" class="form-control" onchange="toggleOtherInput(this)">
+                                        <option value="x" disabled>---Income---</option>
+                                        <option value="Salary" <?php if($trans_category == "Salary") echo "selected"; ?>>Salary</option>
+                                        <option value="Freelance" <?php if($trans_category == "Freelance") echo "selected"; ?>>Freelance</option>
+                                        <option value="Investment" <?php if($trans_category == "Investment") echo "selected"; ?>>Investment</option>
+                                        <option value="Gift" <?php if($trans_category == "Gift") echo "selected"; ?>>Gift</option>
+                                        <option value="Bonus" <?php if($trans_category == "Bonus") echo "selected"; ?>>Bonus</option>
+                                        <option value="x" disabled>---Expenses---</option>
+                                        <option value="Electricity" <?php if($trans_category == "Electricity") echo "selected"; ?>>Electricity</option>
+                                        <option value="Rent" <?php if($trans_category == "Rent") echo "selected"; ?>>Rent</option>
+                                        <option value="Insurance" <?php if($trans_category == "Insurance") echo "selected"; ?>>Insurance</option>
+                                        <option value="Loan" <?php if($trans_category == "Loan") echo "selected"; ?>>Loan</option>
+                                        <option value="Gas" <?php if($trans_category == "Gas") echo "selected"; ?>>Gas</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <!-- Text Box (Hidden by Default) -->
+                                    <div id="otherInputContainer" class="d-none mt-2">
+                                        <input type="text" id="otherInput" name="customCategory" class="form-control" placeholder="Enter custom category">
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="form-group row">
                                 <div class="col-md-12 text-right">
@@ -88,7 +110,7 @@ switch($act){
                                     <?php 
                                     switch($act){
                                         default:
-                                            ?><button type="submit" class="btn btn-lg btn-block btn-success" style="border-radius: 0%; background-color:#008080;">Add Expense</button><?php
+                                            ?><button type="submit" class="btn btn-lg btn-block btn-success" style="border-radius: 0%; background-color:#008080;">Add Transaction</button><?php
                                             break;
 
                                         case 'edit':
@@ -109,8 +131,8 @@ switch($act){
 
 <script>
     // Expense amount validation
-    function validateExpenseAmount() {
-        const amountInput = document.getElementById('expenseamount');
+    function validateTransactionAmount() {
+        const amountInput = document.getElementById('trans_amount');
         const amountValue = amountInput.value.trim();
         
         // Check if the value is empty
@@ -127,7 +149,7 @@ switch($act){
         
         // Check if the value is negative
         if (parseFloat(amountValue) < 0) {
-            alert('Expense amount cannot be negative');
+            alert('Transaction amount cannot be negative');
             return false;
         }
         
@@ -136,7 +158,7 @@ switch($act){
     }
 
     // Prevent typing non-numeric characters (except decimal point)
-    document.getElementById('expenseamount').addEventListener('keypress', function(e) {
+    document.getElementById('trans_amount').addEventListener('keypress', function(e) {
         // Allow: backspace, delete, tab, escape, enter
         if ([46, 8, 9, 27, 13].includes(e.keyCode) || 
             // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X

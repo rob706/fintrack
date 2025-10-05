@@ -13,32 +13,32 @@ function generateReport($con, $userid, $period, $year, $month) {
     
     switch($period) {
         case 'yearly':
-            $query = "SELECT YEAR(incomedate) as year, 
-                      SUM(income) as total_income,
-                      (SELECT SUM(expense) FROM expenses WHERE user_id='$userid' AND YEAR(expensedate) = YEAR(i.incomedate)) as total_expense
-                      FROM income i 
-                      WHERE user_id='$userid' 
-                      GROUP BY YEAR(incomedate) 
+            $query = "SELECT YEAR(date) as year, 
+                      sum(case when value >= 0 then value else 0 end) as total_income,
+                      sum(case when value <= 0 then value else 0 end) as total_expense
+                      FROM transactions 
+                      WHERE user_id='$userid'
+                      GROUP BY YEAR(date) 
                       ORDER BY year DESC";
             break;
             
         case 'monthly':
-            $query = "SELECT MONTH(incomedate) as month, 
-                      SUM(income) as total_income,
-                      (SELECT SUM(expense) FROM expenses WHERE user_id='$userid' AND YEAR(expensedate) = '$year' AND MONTH(expensedate) = MONTH(i.incomedate)) as total_expense
-                      FROM income i 
-                      WHERE user_id='$userid' AND YEAR(incomedate) = '$year'
-                      GROUP BY MONTH(incomedate) 
+            $query = "SELECT MONTH(date) as month, 
+                      sum(case when value >= 0 then value else 0 end) as total_income,
+                      sum(case when value <= 0 then value else 0 end) as total_expense
+                      FROM transactions 
+                      WHERE user_id='$userid' AND YEAR(date) = '$year'
+                      GROUP BY MONTH(date) 
                       ORDER BY month DESC";
             break;
             
         case 'weekly':
-            $query = "SELECT WEEK(incomedate, 1) as week, 
-                      SUM(income) as total_income,
-                      (SELECT SUM(expense) FROM expenses WHERE user_id='$userid' AND YEAR(expensedate) = '$year' AND MONTH(expensedate) = '$month' AND WEEK(expensedate, 1) = WEEK(i.incomedate, 1)) as total_expense
-                      FROM income i 
-                      WHERE user_id='$userid' AND YEAR(incomedate) = '$year' AND MONTH(incomedate) = '$month'
-                      GROUP BY WEEK(incomedate, 1) 
+            $query = "SELECT WEEK(date, 1) as week, 
+                      sum(case when value >= 0 then value else 0 end) as total_income,
+                      sum(case when value <= 0 then value else 0 end) as total_expense
+                      FROM transactions
+                      WHERE user_id='$userid' AND YEAR(date) = '$year' AND MONTH(date) = '$month'
+                      GROUP BY WEEK(date, 1) 
                       ORDER BY week DESC";
             break;
     }
