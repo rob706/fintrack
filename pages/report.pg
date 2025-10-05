@@ -133,7 +133,7 @@ $reportData = generateReport($con, $userid, $period, $year, $month);
                         
                         $income = $row['total_income'] ? $row['total_income'] : 0;
                         $expense = $row['total_expense'] ? $row['total_expense'] : 0;
-                        $balance = $income - $expense;
+                        $balance = $income + $expense;
                         
                         $totalIncome += $income;
                         $totalExpense += $expense;
@@ -154,7 +154,7 @@ $reportData = generateReport($con, $userid, $period, $year, $month);
                         <td class="text-success"><?php echo number_format($totalIncome, 2) ?></td>
                         <td class="text-danger"><?php echo number_format($totalExpense, 2) ?></td>
                         <td class="<?php echo ($totalIncome - $totalExpense) >= 0 ? 'text-success' : 'text-danger' ?>">
-                            <?php echo number_format($totalIncome - $totalExpense, 2) ?>
+                            <?php echo number_format($totalIncome + $totalExpense, 2) ?>
                         </td>
                     </tr>
                 </tfoot>

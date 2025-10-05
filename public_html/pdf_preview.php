@@ -96,7 +96,7 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
         
         $income = $row['total_income'] ? $row['total_income'] : 0;
         $expense = $row['total_expense'] ? $row['total_expense'] : 0;
-        $balance = $income - $expense;
+        $balance = $income + $expense;
         
         $totalIncome += $income;
         $totalExpense += $expense;
@@ -112,7 +112,7 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
     $pdf->Cell(40,10,'Total',1,0,'L');
     $pdf->Cell(40,10,number_format($totalIncome, 2),1,0,'R');
     $pdf->Cell(40,10,number_format($totalExpense, 2),1,0,'R');
-    $pdf->Cell(40,10,number_format($totalIncome - $totalExpense, 2),1,1,'R');
+    $pdf->Cell(40,10,number_format($totalIncome + $totalExpense, 2),1,1,'R');
     
     // Output PDF
     $pdf->Output('D','financial_report_'.$period.'_'.date('Ymd').'.pdf');
@@ -226,7 +226,7 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
                     
                     $income = $row['total_income'] ? $row['total_income'] : 0;
                     $expense = $row['total_expense'] ? $row['total_expense'] : 0;
-                    $balance = $income - $expense;
+                    $balance = $income + $expense;
                     
                     $totalIncome += $income;
                     $totalExpense += $expense;
@@ -247,7 +247,7 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
                     <td class="text-right text-success"><strong><?php echo number_format($totalIncome, 2); ?></strong></td>
                     <td class="text-right text-danger"><strong><?php echo number_format($totalExpense, 2); ?></strong></td>
                     <td class="text-right <?php echo ($totalIncome - $totalExpense) >= 0 ? 'text-success' : 'text-danger'; ?>">
-                        <strong><?php echo number_format($totalIncome - $totalExpense, 2); ?></strong>
+                        <strong><?php echo number_format($totalIncome + $totalExpense, 2); ?></strong>
                     </td>
                 </tr>
             </tfoot>

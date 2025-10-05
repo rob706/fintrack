@@ -17,21 +17,21 @@ if ($time_period == 'yearly') {
 } elseif ($time_period == 'weekly') {
 
     // Weekly trend data
-    $q_exp_line = "SELECT CONCAT(YEAR(date), '-W', WEEK(date)) as period, SUM(value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 GROUP BY YEAR(date), WEEK(date)";
+    $q_exp_line = "SELECT CONCAT(YEAR(date), '-W', WEEK(date)) as period, SUM(-value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 GROUP BY YEAR(date), WEEK(date)";
     $q_inc_line = "SELECT CONCAT(YEAR(date), '-W', WEEK(date)) as period, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY YEAR(date), WEEK(date)";
 
     // Weekly category data
-    $q_exp_dc = "SELECT category as expensecategory, SUM(value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 AND YEAR(date) = YEAR(CURDATE()) AND WEEK(date) = WEEK(CURDATE()) GROUP BY category";
+    $q_exp_dc = "SELECT category as expensecategory, SUM(-value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 AND YEAR(date) = YEAR(CURDATE()) AND WEEK(date) = WEEK(CURDATE()) GROUP BY category";
     $q_inc_dc = "SELECT category as incomecategory, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 AND YEAR(date) = YEAR(CURDATE()) AND WEEK(date) = WEEK(CURDATE()) GROUP BY category";
 
 } else {
 
     // Monthly trend data
-    $q_exp_line = "SELECT DATE_FORMAT(date, '%Y-%m') as period, SUM(value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 GROUP BY DATE_FORMAT(date, '%Y-%m')";
+    $q_exp_line = "SELECT DATE_FORMAT(date, '%Y-%m') as period, SUM(-value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 GROUP BY DATE_FORMAT(date, '%Y-%m')";
     $q_inc_line = "SELECT DATE_FORMAT(date, '%Y-%m') as period, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY DATE_FORMAT(date, '%Y-%m')";
 
     // Monthly category data
-    $q_exp_dc = "SELECT category as expensecategory, SUM(value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 AND DATE_FORMAT(date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY category";
+    $q_exp_dc = "SELECT category as expensecategory, SUM(-value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 AND DATE_FORMAT(date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY category";
     $q_inc_dc = "SELECT category as incomecategory, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 AND DATE_FORMAT(date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY category";
 
 }
