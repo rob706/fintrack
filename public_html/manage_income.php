@@ -1,6 +1,6 @@
 <?php
 include("session.php");
-$exp_fetched = mysqli_query($con, "SELECT * FROM expenses WHERE user_id = '$userid'");
+$income_fetched = mysqli_query($con, "SELECT * FROM income WHERE user_id = '$userid'");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,13 +8,13 @@ $exp_fetched = mysqli_query($con, "SELECT * FROM expenses WHERE user_id = '$user
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Expense Manager - Dashboard</title>
+    <title>Income Manager - Dashboard</title>
     
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="core/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Feather JS for Icons -->
-    <script src="js/feather.min.js"></script>
+    <script src="core/js/feather.min.js"></script>
     
     <style>
     :root {
@@ -340,13 +340,13 @@ $exp_fetched = mysqli_query($con, "SELECT * FROM expenses WHERE user_id = '$user
         <a href="add_expense.php" class="list-group-item list-group-item-action">
           <span data-feather="plus-circle"></span> Add Expenses
         </a>
-        <a href="manage_expense.php" class="list-group-item list-group-item-action sidebar-active">
+        <a href="manage_expense.php" class="list-group-item list-group-item-action">
           <span data-feather="edit"></span> Manage Expenses
         </a>
         <a href="add_income.php" class="list-group-item list-group-item-action">
           <span data-feather="plus-circle"></span> Add Income
         </a>
-        <a href="manage_income.php" class="list-group-item list-group-item-action">
+        <a href="manage_income.php" class="list-group-item list-group-item-action sidebar-active">
           <span data-feather="edit"></span> Manage Income
         </a>
         <a href="report.php" class="list-group-item list-group-item-action">
@@ -382,12 +382,14 @@ $exp_fetched = mysqli_query($con, "SELECT * FROM expenses WHERE user_id = '$user
           </div>
         </div>
       </header>
+
+
       <!-- MAIN CONTENT REMAINS EXACTLY THE SAME -->
       <div class="container-fluid">
         <div class="sticky-heading">
-          <h3 class="mt-3 text-center">Manage Expenses</h3>
+          <h3 class="mt-3 text-center">Manage Income</h3>
           <hr>
-        </div> 
+        </div>
         
         <!-- Date Filter Form -->
         <div class="row justify-content-center mb-4">
@@ -416,34 +418,32 @@ $exp_fetched = mysqli_query($con, "SELECT * FROM expenses WHERE user_id = '$user
                   <th>#</th>
                   <th>Date</th>
                   <th>Amount</th>
-                  <th>Expense Category</th>
+                  <th>Income Category</th>
                   <th colspan="2">Action</th>
                 </tr>
               </thead>
-
               <?php
               $count = 1;
               // Modify the query to include date filtering
-              $query = "SELECT * FROM expenses WHERE user_id = '$userid'";
+              $query = "SELECT * FROM income WHERE user_id = '$userid'";
               if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
                 $start_date = $_GET['start_date'];
                 $end_date = $_GET['end_date'];
-                $query .= " AND expensedate BETWEEN '$start_date' AND '$end_date'";
+                $query .= " AND incomedate BETWEEN '$start_date' AND '$end_date'";
               }
-              $exp_fetched = mysqli_query($con, $query);
-              while ($row = mysqli_fetch_array($exp_fetched)) {
+              $income_fetched = mysqli_query($con, $query);
+              while ($row = mysqli_fetch_array($income_fetched)) {
               ?>
-
               <tr>
                 <td><?php echo $count;?></td>
-                <td><?php echo $row['expensedate']; ?></td>
-                <td><?php echo 'Rs:'.$row['expense']; ?></td>
-                <td><?php echo $row['expensecategory']; ?></td>
+                <td><?php echo $row['incomedate']; ?></td>
+                <td><?php echo 'Rs:'.$row['income']; ?></td>
+                <td><?php echo $row['incomecategory']; ?></td>
                 <td class="text-center">
-                  <a href="add_expense.php?edit=<?php echo $row['expense_id']; ?>" class="btn btn-primary btn-sm" style="border-radius:0%;">Edit</a>
+                  <a href="add_income.php?edit=<?php echo $row['income_id']; ?>" class="btn btn-primary btn-sm" style="border-radius:0%;">Edit</a>
                 </td>
                 <td class="text-center">
-                  <a href="add_expense.php?delete=<?php echo $row['expense_id']; ?>" class="btn btn-danger btn-sm" style="border-radius:0%;">Delete</a>
+                  <a href="add_income.php?delete=<?php echo $row['income_id']; ?>" class="btn btn-danger btn-sm" style="border-radius:0%;">Delete</a>
                 </td>
               </tr>
               <?php $count++; } ?>
@@ -455,8 +455,8 @@ $exp_fetched = mysqli_query($con, "SELECT * FROM expenses WHERE user_id = '$user
 </div>
 
 <!-- Bootstrap core JavaScript -->
-<script src="js/jquery.slim.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<script src="core/js/jquery.slim.min.js"></script>
+<script src="core/js/bootstrap.min.js"></script>
 <script>
     // Initialize Feather Icons
     feather.replace();

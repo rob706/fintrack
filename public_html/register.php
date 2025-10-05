@@ -1,5 +1,5 @@
 <?php
-require('config.php');
+require("../core/config.php");
 if (isset($_REQUEST['firstname'])) {
   if ($_REQUEST['password'] == $_REQUEST['confirm_password']) {
     $firstname = stripslashes($_REQUEST['firstname']);
