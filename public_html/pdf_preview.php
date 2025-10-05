@@ -13,33 +13,33 @@ function generateReport($con, $userid, $period, $year, $month) {
     
     switch($period) {
         case 'yearly':
-            $query = "SELECT YEAR(incomedate) as year, 
-                      SUM(income) as total_income,
-                      (SELECT SUM(expense) FROM expenses WHERE user_id='$userid' AND YEAR(expensedate) = YEAR(i.incomedate)) as total_expense
-                      FROM income i 
-                      WHERE user_id='$userid' 
-                      GROUP BY YEAR(incomedate) 
-                      ORDER BY year DESC";
+            $query = "SELECT YEAR(date) as year, 
+                      sum(case when value >= 0 then value else 0 end) as total_income,
+                      sum(case when value <= 0 then value else 0 end) as total_expense
+                      FROM transactions 
+                      WHERE user_id='$userid'
+                      GROUP BY YEAR(date) 
+                      ORDER BY year ASC";
             break;
             
         case 'monthly':
-            $query = "SELECT MONTH(incomedate) as month, 
-                      SUM(income) as total_income,
-                      (SELECT SUM(expense) FROM expenses WHERE user_id='$userid' AND YEAR(expensedate) = '$year' AND MONTH(expensedate) = MONTH(i.incomedate)) as total_expense
-                      FROM income i 
-                      WHERE user_id='$userid' AND YEAR(incomedate) = '$year'
-                      GROUP BY MONTH(incomedate) 
-                      ORDER BY month DESC";
+            $query = "SELECT MONTH(date) as month, 
+                      sum(case when value >= 0 then value else 0 end) as total_income,
+                      sum(case when value <= 0 then value else 0 end) as total_expense
+                      FROM transactions 
+                      WHERE user_id='$userid' AND YEAR(date) = '$year'
+                      GROUP BY MONTH(date) 
+                      ORDER BY month ASC";
             break;
             
         case 'weekly':
-            $query = "SELECT WEEK(incomedate, 1) as week, 
-                      SUM(income) as total_income,
-                      (SELECT SUM(expense) FROM expenses WHERE user_id='$userid' AND YEAR(expensedate) = '$year' AND MONTH(expensedate) = '$month' AND WEEK(expensedate, 1) = WEEK(i.incomedate, 1)) as total_expense
-                      FROM income i 
-                      WHERE user_id='$userid' AND YEAR(incomedate) = '$year' AND MONTH(incomedate) = '$month'
-                      GROUP BY WEEK(incomedate, 1) 
-                      ORDER BY week DESC";
+            $query = "SELECT WEEK(date, 1) as week, 
+                      sum(case when value >= 0 then value else 0 end) as total_income,
+                      sum(case when value <= 0 then value else 0 end) as total_expense
+                      FROM transactions
+                      WHERE user_id='$userid' AND YEAR(date) = '$year' AND MONTH(date) = '$month'
+                      GROUP BY WEEK(date, 1) 
+                      ORDER BY week ASC";
             break;
     }
     
@@ -69,9 +69,13 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
     $pdf->SetFont('Arial','',12);
     
     // Period info
-    $periodInfo = "Year: $year";
-    if($period != 'yearly') $periodInfo .= ", Month: ".date('F', mktime(0, 0, 0, $month, 10));
-    $pdf->Cell(0,10,$periodInfo,0,1);
+    if($period != 'yearly'){
+        $periodInfo = "Year: $year";
+        if($period != 'monthly'){
+            $periodInfo .= ", Month: ".date('F', mktime(0, 0, 0, $month, 10));
+        }
+    }
+    $pdf->Cell(0,10,$periodInfo,0,1,'C');
     $pdf->Ln(5);
     
     // Table header
@@ -96,7 +100,7 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
         
         $income = $row['total_income'] ? $row['total_income'] : 0;
         $expense = $row['total_expense'] ? $row['total_expense'] : 0;
-        $balance = $income - $expense;
+        $balance = $income + $expense;
         
         $totalIncome += $income;
         $totalExpense += $expense;
@@ -112,7 +116,7 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
     $pdf->Cell(40,10,'Total',1,0,'L');
     $pdf->Cell(40,10,number_format($totalIncome, 2),1,0,'R');
     $pdf->Cell(40,10,number_format($totalExpense, 2),1,0,'R');
-    $pdf->Cell(40,10,number_format($totalIncome - $totalExpense, 2),1,1,'R');
+    $pdf->Cell(40,10,number_format($totalIncome + $totalExpense, 2),1,1,'R');
     
     // Output PDF
     $pdf->Output('D','financial_report_'.$period.'_'.date('Ymd').'.pdf');
@@ -195,10 +199,13 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
         <div class="report-header">
             <div class="report-title">Financial Report - <?php echo ucfirst($period); ?> View</div>
             <div class="report-period">
-                Year: <?php echo $year; ?>
-                <?php if($period != 'yearly'): ?>
-                , Month: <?php echo date('F', mktime(0, 0, 0, $month, 10)); ?>
-                <?php endif; ?>
+                <?php if($period != 'yearly'){ ?>
+                    Year: <?php echo $year; ?>
+                    <?php if($period != 'monthly'){ ?>
+                    , Month: <?php echo date('F', mktime(0, 0, 0, $month, 10)); ?>
+                <?php }
+                } ?>
+                
             </div>
         </div>
         
@@ -226,7 +233,7 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
                     
                     $income = $row['total_income'] ? $row['total_income'] : 0;
                     $expense = $row['total_expense'] ? $row['total_expense'] : 0;
-                    $balance = $income - $expense;
+                    $balance = $income + $expense;
                     
                     $totalIncome += $income;
                     $totalExpense += $expense;
@@ -247,7 +254,7 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
                     <td class="text-right text-success"><strong><?php echo number_format($totalIncome, 2); ?></strong></td>
                     <td class="text-right text-danger"><strong><?php echo number_format($totalExpense, 2); ?></strong></td>
                     <td class="text-right <?php echo ($totalIncome - $totalExpense) >= 0 ? 'text-success' : 'text-danger'; ?>">
-                        <strong><?php echo number_format($totalIncome - $totalExpense, 2); ?></strong>
+                        <strong><?php echo number_format($totalIncome + $totalExpense, 2); ?></strong>
                     </td>
                 </tr>
             </tfoot>

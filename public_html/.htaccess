@@ -31,13 +31,9 @@ RewriteRule ^login.htm?$ login.php [L]
 RewriteRule ^logout.htm?$ logout.php [L]
 RewriteRule ^register.htm?$ register.php [L]
 
-RewriteRule ^dashboard/expense/add/?$ dashboard.php?pg=manage_expense [L]
-RewriteRule ^dashboard/expense/add.htm?$ dashboard.php?pg=manage_expense [L]
-RewriteRule ^dashboard/expense/([^/\.]+)/([^/\.]+).htm?$ dashboard.php?pg=manage_expense&act=$1&value=$2 [L]
-
-RewriteRule ^dashboard/income/add/?$ dashboard.php?pg=manage_income [L]
-RewriteRule ^dashboard/income/add.htm?$ dashboard.php?pg=manage_income [L]
-RewriteRule ^dashboard/income/([^/\.]+)/([^/\.]+).htm?$ dashboard.php?pg=manage_income&act=$1&value=$2 [L]
+RewriteRule ^dashboard/transaction/add/?$ dashboard.php?pg=manage_transaction [L]
+RewriteRule ^dashboard/transaction/add.htm?$ dashboard.php?pg=manage_transaction [L]
+RewriteRule ^dashboard/transaction/([^/\.]+)/([^/\.]+).htm?$ dashboard.php?pg=manage_transaction&act=$1&value=$2 [L]
 
 RewriteRule ^dashboard/?$ dashboard.php [L]
 RewriteRule ^dashboard/([^/\.]+).htm?$ dashboard.php?pg=$1 [L]
