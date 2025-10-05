@@ -1,4 +1,26 @@
 Database File Version Log
 
 - v1 - Original - Siva Rajendran - 23rd June 2001
+- v1.1 - Update for Transactions Consolidation - rob706 - 5th October 2025
+    The below sql needs to be ran to do this Update
+
+    [MySQL]
+
+    CREATE TABLE if not exists `transactions` (
+    `transaction_id` int(20) NOT NULL,
+    `user_id` varchar(15) NOT NULL,
+    `date` varchar(15) NOT NULL,
+    `category` varchar(50) NOT NULL,
+    `value` int(20) NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+    ALTER TABLE `transactions` ADD PRIMARY KEY (`transaction_id`);
+    ALTER TABLE `transactions` MODIFY `transaction_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+    insert into transactions (`user_id`,`date`,`category`,`value`) select user_id,expensedate,expensecategory,-expense from expenses;
+
+    insert into transactions (`user_id`,`date`,`category`,`value`) select user_id,incomedate,incomecategory,income from income;
+
+    drop table if exists expenses;
+    drop table if exists income;
 
