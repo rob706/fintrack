@@ -1,5 +1,4 @@
 <?php
-$exp_fetched = mysqli_query($con, "SELECT * FROM expenses WHERE user_id = '$userid'");
 
 if (isset($_POST['save'])) {
     $fname = $_POST['first_name'];
