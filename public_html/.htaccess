@@ -1,0 +1,43 @@
+RewriteEngine On
+RewriteBase /
+
+<FilesMatch “\.(htaccess|htpasswd|ini|eps|log|sh|xcf)$”>
+Deny from all
+</FilesMatch>
+
+## Send to https ##
+
+RewriteCond %{HTTP_HOST} !^127\.\d+\.\d+\.\d+$  [NC] # Don't force development environments to https
+RewriteCond %{HTTPS} !=on [NC]
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+## Lock Directories ##
+
+Options -Indexes -MultiViews +FollowSymlinks
+
+####### House Keeping #######
+
+## Error Pages ##
+
+#ErrorDocument 401 /error.php?error=401
+#ErrorDocument 403 /error.php?error=403
+#ErrorDocument 404 /error.php?error=404
+#ErrorDocument 500 /error.php?error=500
+
+####### Clean URLS #######
+
+RewriteRule ^index.htm?$ index.php [L]
+RewriteRule ^login.htm?$ login.php [L]
+RewriteRule ^logout.htm?$ logout.php [L]
+RewriteRule ^register.htm?$ register.php [L]
+
+RewriteRule ^dashboard/expense/add/?$ dashboard.php?pg=manage_expense [L]
+RewriteRule ^dashboard/expense/add.htm?$ dashboard.php?pg=manage_expense [L]
+RewriteRule ^dashboard/expense/([^/\.]+)/([^/\.]+).htm?$ dashboard.php?pg=manage_expense&act=$1&value=$2 [L]
+
+RewriteRule ^dashboard/income/add/?$ dashboard.php?pg=manage_income [L]
+RewriteRule ^dashboard/income/add.htm?$ dashboard.php?pg=manage_income [L]
+RewriteRule ^dashboard/income/([^/\.]+)/([^/\.]+).htm?$ dashboard.php?pg=manage_income&act=$1&value=$2 [L]
+
+RewriteRule ^dashboard/?$ dashboard.php [L]
+RewriteRule ^dashboard/([^/\.]+).htm?$ dashboard.php?pg=$1 [L]

@@ -1,1 +1,4 @@
 config.php
+
+uploads/
+!uploads/default_profile.png

@@ -1,0 +1,232 @@
+<?php
+
+// Set default time period
+$period = "monthly";
+$year = date('Y');
+$month = date('m');
+
+if(isset($_POST['period'])) $period = $con->real_escape_string($_POST['period']);
+if(isset($_POST['year'])) $year = $con->real_escape_string($_POST['year']);
+if(isset($_POST['month'])) $month = $con->real_escape_string($_POST['month']);
+
+// Generate report data
+function generateReport($con, $userid, $period, $year, $month) {
+    $data = array();
+    
+    switch($period) {
+        case 'yearly':
+            // Yearly report - don't need month parameter
+            $query = "SELECT YEAR(incomedate) as year, 
+                      SUM(income) as total_income,
+                      (SELECT SUM(expense) FROM expenses WHERE user_id='$userid' AND YEAR(expensedate) = YEAR(i.incomedate)) as total_expense
+                      FROM income i 
+                      WHERE user_id='$userid'
+                      GROUP BY YEAR(incomedate) 
+                      ORDER BY year DESC";
+            break;
+            
+        case 'monthly':
+            // Monthly report for selected year
+            $query = "SELECT MONTH(incomedate) as month, 
+                      SUM(income) as total_income,
+                      (SELECT SUM(expense) FROM expenses WHERE user_id='$userid' AND YEAR(expensedate) = '$year' AND MONTH(expensedate) = MONTH(i.incomedate)) as total_expense
+                      FROM income i 
+                      WHERE user_id='$userid' AND YEAR(incomedate) = '$year'
+                      GROUP BY MONTH(incomedate) 
+                      ORDER BY month DESC";
+            break;
+            
+        case 'weekly':
+            // Weekly report for selected month
+            $query = "SELECT WEEK(incomedate, 1) as week, 
+                      SUM(income) as total_income,
+                      (SELECT SUM(expense) FROM expenses WHERE user_id='$userid' AND YEAR(expensedate) = '$year' AND MONTH(expensedate) = '$month' AND WEEK(expensedate, 1) = WEEK(i.incomedate, 1)) as total_expense
+                      FROM income i 
+                      WHERE user_id='$userid' AND YEAR(incomedate) = '$year' AND MONTH(incomedate) = '$month'
+                      GROUP BY WEEK(incomedate, 1) 
+                      ORDER BY week DESC";
+            break;
+    }
+    
+    $result = mysqli_query($con, $query);
+    while($row = mysqli_fetch_assoc($result)) {
+        $data[] = $row;
+    }
+    
+    return $data;
+}
+
+$reportData = generateReport($con, $userid, $period, $year, $month);
+
+?>
+        <div class="report-period">
+            <form method="post" class="form-inline">
+                <div class="form-group mr-3">
+                    <label for="period" class="mr-2">Report Period:</label>
+                    <select name="period" id="period" class="form-control" onchange="this.form.submit()">
+                        <option value="yearly" <?php echo $period == 'yearly' ? 'selected' : '' ?>>Yearly</option>
+                        <option value="monthly" <?php echo $period == 'monthly' ? 'selected' : '' ?>>Monthly</option>
+                        <option value="weekly" <?php echo $period == 'weekly' ? 'selected' : '' ?>>Weekly</option>
+                    </select>
+                </div>
+                
+                <?php if($period != 'yearly'): ?>
+                <div class="form-group mr-3">
+                    <label for="year" class="mr-2">Year:</label>
+                    <select name="year" id="year" class="form-control" onchange="this.form.submit()">
+                        <?php 
+                        $currentYear = date('Y');
+                        for($y = $currentYear; $y >= $currentYear - 5; $y--) {
+                            echo '<option value="'.$y.'" '.($year == $y ? 'selected' : '').'>'.$y.'</option>';
+                        }
+                        ?>
+                    </select>
+                </div>
+                <?php endif; ?>
+                
+                <?php if($period == 'weekly'): ?>
+                <div class="form-group mr-3">
+                    <label for="month" class="mr-2">Month:</label>
+                    <select name="month" id="month" class="form-control" onchange="this.form.submit()">
+                        <?php 
+                        for($m = 1; $m <= 12; $m++) {
+                            $monthName = date('F', mktime(0, 0, 0, $m, 10));
+                            echo '<option value="'.$m.'" '.($month == $m ? 'selected' : '').'>'.$monthName.'</option>';
+                        }
+                        ?>
+                    </select>
+                </div>
+                <?php endif; ?>
+                
+                <a href="/pdf_preview.php?period=<?php echo $period ?>&year=<?php echo $year ?>&month=<?php echo $month ?>" class="btn btn-primary">
+                      <span data-feather="download"></span> Export PDF
+                </a>
+            </form>
+        </div>
+        
+        <div class="chart-container">
+            <canvas id="financialChart"></canvas>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Period</th>
+                        <th>Income</th>
+                        <th>Expense</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php 
+                    $totalIncome = 0;
+                    $totalExpense = 0;
+                    
+                    foreach($reportData as $row): 
+                        $periodLabel = '';
+                        switch($period) {
+                            case 'yearly': $periodLabel = $row['year']; break;
+                            case 'monthly': $periodLabel = date('F', mktime(0, 0, 0, $row['month'], 10)); break;
+                            case 'weekly': $periodLabel = 'Week '.$row['week']; break;
+                        }
+                        
+                        $income = $row['total_income'] ? $row['total_income'] : 0;
+                        $expense = $row['total_expense'] ? $row['total_expense'] : 0;
+                        $balance = $income - $expense;
+                        
+                        $totalIncome += $income;
+                        $totalExpense += $expense;
+                    ?>
+                    <tr>
+                        <td><?php echo $periodLabel ?></td>
+                        <td class="text-success"><?php echo number_format($income, 2) ?></td>
+                        <td class="text-danger"><?php echo number_format($expense, 2) ?></td>
+                        <td class="<?php echo $balance >= 0 ? 'text-success' : 'text-danger' ?>">
+                            <?php echo number_format($balance, 2) ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr class="font-weight-bold">
+                        <td>Total</td>
+                        <td class="text-success"><?php echo number_format($totalIncome, 2) ?></td>
+                        <td class="text-danger"><?php echo number_format($totalExpense, 2) ?></td>
+                        <td class="<?php echo ($totalIncome - $totalExpense) >= 0 ? 'text-success' : 'text-danger' ?>">
+                            <?php echo number_format($totalIncome - $totalExpense, 2) ?>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+<script>
+    // Initialize Chart
+    const ctx = document.getElementById('financialChart').getContext('2d');
+    const chartData = {
+        labels: [
+            <?php 
+            foreach($reportData as $row) {
+                $label = '';
+                switch($period) {
+                    case 'yearly': $label = $row['year']; break;
+                    case 'monthly': $label = date('M', mktime(0, 0, 0, $row['month'], 10)); break;
+                    case 'weekly': $label = 'Week '.$row['week']; break;
+                }
+                echo "'".$label."',";
+            }
+            ?>
+        ],
+        datasets: [
+            {
+                label: 'Income',
+                backgroundColor: 'rgba(40, 167, 69, 0.5)',
+                borderColor: 'rgba(40, 167, 69, 1)',
+                borderWidth: 1,
+                data: [
+                    <?php 
+                    foreach($reportData as $row) {
+                        echo ($row['total_income'] ? $row['total_income'] : 0).",";
+                    }
+                    ?>
+                ]
+            },
+            {
+                label: 'Expense',
+                backgroundColor: 'rgba(220, 53, 69, 0.5)',
+                borderColor: 'rgba(220, 53, 69, 1)',
+                borderWidth: 1,
+                data: [
+                    <?php 
+                    foreach($reportData as $row) {
+                        echo ($row['total_expense'] ? $row['total_expense'] : 0).",";
+                    }
+                    ?>
+                ]
+            }
+        ]
+    };
+    
+    const financialChart = new Chart(ctx, {
+        type: 'bar',
+        data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Income vs Expense - <?php echo ucfirst($period) ?> View'
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

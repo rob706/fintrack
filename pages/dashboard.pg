@@ -1,0 +1,337 @@
+<?php
+
+// Get time period filter (default to monthly)
+$time_period = isset($_GET['period']) ? $_GET['period'] : 'monthly';
+
+// Expense Queries based on time period
+if ($time_period == 'yearly') {
+
+    // Yearly trend data
+    $q_exp_line = "SELECT YEAR(expensedate) as period, SUM(expense) as expense FROM expenses WHERE user_id = '$userid' GROUP BY YEAR(expensedate)";
+    $q_inc_line = "SELECT YEAR(incomedate) as period, SUM(income) as income FROM income WHERE user_id = '$userid' GROUP BY YEAR(incomedate)";
+
+    // Yearly category data
+    $q_exp_dc = "SELECT expensecategory, SUM(expense) as expense FROM expenses WHERE user_id = '$userid' GROUP BY expensecategory";
+    $q_inc_dc = "SELECT incomecategory, SUM(income) as income FROM income WHERE user_id = '$userid' GROUP BY incomecategory";
+
+} elseif ($time_period == 'weekly') {
+
+    // Weekly trend data
+    $q_exp_line = "SELECT CONCAT(YEAR(expensedate), '-W', WEEK(expensedate)) as period, SUM(expense) as expense FROM expenses WHERE user_id = '$userid' GROUP BY YEAR(expensedate), WEEK(expensedate)";
+    $q_inc_line = "SELECT CONCAT(YEAR(incomedate), '-W', WEEK(incomedate)) as period, SUM(income) as income FROM income WHERE user_id = '$userid' GROUP BY YEAR(incomedate), WEEK(incomedate)";
+
+    // Weekly category data
+    $q_exp_dc = "SELECT expensecategory, SUM(expense) as expense FROM expenses WHERE user_id = '$userid' AND YEAR(expensedate) = YEAR(CURDATE()) AND WEEK(expensedate) = WEEK(CURDATE()) GROUP BY expensecategory";
+    $q_inc_dc = "SELECT incomecategory, SUM(income) as income FROM income WHERE user_id = '$userid' AND YEAR(incomedate) = YEAR(CURDATE()) AND WEEK(incomedate) = WEEK(CURDATE()) GROUP BY incomecategory";
+
+} else {
+
+    // Monthly trend data
+    $q_exp_line = "SELECT DATE_FORMAT(expensedate, '%Y-%m') as period, SUM(expense) as expense FROM expenses WHERE user_id = '$userid' GROUP BY DATE_FORMAT(expensedate, '%Y-%m')";
+    $q_inc_line = "SELECT DATE_FORMAT(incomedate, '%Y-%m') as period, SUM(income) as income FROM income WHERE user_id = '$userid' GROUP BY DATE_FORMAT(incomedate, '%Y-%m')";
+
+    // Monthly category data
+    $q_exp_dc = "SELECT expensecategory, SUM(expense) as expense FROM expenses WHERE user_id = '$userid' AND DATE_FORMAT(expensedate, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY expensecategory";
+    $q_inc_dc = "SELECT incomecategory, SUM(income) as income FROM income WHERE user_id = '$userid' AND DATE_FORMAT(incomedate, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY incomecategory";
+
+}
+
+    ##### Queries for Charts #####
+
+    // Queries
+
+    $exp_line = $con->query($q_exp_line);
+    $inc_line = $con->query($q_inc_line);
+    $exp_dc = $con->query($q_exp_dc);
+    $inc_dc = $con->query($q_inc_dc);
+
+    // Chart Inputs
+
+    ## Expense Lines
+
+    $el_label = $el_dataset = $il_label = $il_dataset = 
+    $ec_label = $ec_dataset = $ic_label = $ic_dataset = "";
+
+    while($el = $exp_line->fetch_assoc()){
+      $el_label .=  "\"".$el['period']."\",";
+      $el_dataset.=  "\"".$el['expense']."\",";
+    }
+    
+    ## Income Lines
+
+    while($il = $inc_line->fetch_assoc()){
+      $il_label .=  "\"".$il['period']."\",";
+      $il_dataset.=  "\"".$il['income']."\",";
+    }
+
+    ## Expense Categories
+
+    while($ec = $exp_dc->fetch_assoc()){
+      $ec_label .=  "\"".$ec['expensecategory']."\",";
+      $ec_dataset.=  "\"".$ec['expense']."\",";
+    }
+
+    ## Income Categories
+
+    while($ic = $inc_dc->fetch_assoc()){
+      $ic_label .=  "\"".$ic['incomecategory']."\",";
+      $ic_dataset.=  "\"".$ic['income']."\",";
+    }
+    
+
+?>
+
+        <!-- Quick Actions -->
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body p-2">
+                <div class="row text-center">
+                  <div class="col">
+                    <a href="/dashboard/add_expense.htm" class="text-decoration-none">
+                      <div class="quick-action">
+                        <span data-feather="plus-circle" class="text-primary"></span>
+                        <p class="mt-1 mb-0">Add Expense</p>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <a href="/dashboard/manage_expense.htm" class="text-decoration-none">
+                      <div class="quick-action">
+                        <span data-feather="edit" class="text-success"></span>
+                        <p class="mt-1 mb-0">Manage Expenses</p>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <a href="/dashboard/add_income.htm" class="text-decoration-none">
+                      <div class="quick-action">
+                        <span data-feather="plus-circle" class="text-primary"></span>
+                        <p class="mt-1 mb-0">Add Income</p>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <a href="/dashboard/manage_income.htm" class="text-decoration-none">
+                      <div class="quick-action">
+                        <span data-feather="edit" class="text-success"></span>
+                        <p class="mt-1 mb-0">Manage Income</p>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <a href="/dashboard/report.htm" class="text-decoration-none">
+                      <div class="quick-action">
+                        <span data-feather="bar-chart-2" class="text-info"></span>
+                        <p class="mt-1 mb-0">Report</p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial Reports -->
+        <div class="row mb-4">
+           <div class="col-lg-12">
+             <div class="btn-group btn-group-lg d-flex justify-content-center" style="box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
+               <a href="?period=weekly" 
+                 class="btn flex-fill text-uppercase fw-<?php echo $time_period == 'weekly' ? 'bold' : 'normal'; ?>" 
+                 style="font-size: 1.1rem; padding: 0.5rem 1rem; 
+                 <?php echo $time_period == 'weekly' ? 'background-color: #0d6efd; color: white;' : 'background-color: #f8f9fa; color: #495057;' ?>">
+                 <i class="bi bi-calendar-week me-2" style="font-size: 1.2rem;"></i> Weekly
+               </a>
+               <a href="?period=monthly" 
+                  class="btn flex-fill text-uppercase fw-<?php echo $time_period == 'monthly' ? 'bold' : 'normal'; ?>" 
+                  style="font-size: 1.1rem; padding: 0.5rem 1rem; 
+                 <?php echo $time_period == 'monthly' ? 'background-color: #0d6efd; color: white;' : 'background-color: #f8f9fa; color: #495057;' ?>">
+                 <i class="bi bi-calendar-month me-2" style="font-size: 1.2rem;"></i> Monthly
+               </a>
+               <a href="?period=yearly" 
+                  class="btn flex-fill text-uppercase fw-<?php echo $time_period == 'yearly' ? 'bold' : 'normal'; ?>" 
+                  style="font-size: 1.1rem; padding: 0.5rem 1rem; 
+                  <?php echo $time_period == 'yearly' ? 'background-color: #0d6efd; color: white;' : 'background-color: #f8f9fa; color: #495057;' ?>">
+                  <i class="bi bi-calendar me-2" style="font-size: 1.2rem;"></i> Yearly
+               </a>
+             </div>
+           </div>
+         </div>
+
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Expense Trends</span>
+                
+              </div>
+              <div class="card-body p-2">
+                <div class="chart-container">
+                  <canvas id="expense_line"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Expense Categories</span>
+                
+              </div>
+              <div class="card-body p-2">
+                <div class="chart-container">
+                  <canvas id="expense_category_pie"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row mt-3">
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Income Trends</span>
+                
+              </div>
+              <div class="card-body p-2">
+                <div class="chart-container">
+                  <canvas id="income_line"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Income Categories</span>
+                
+              </div>
+              <div class="card-body p-2">
+                <div class="chart-container">
+                  <canvas id="income_category_pie"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+          // Charts
+    document.addEventListener('DOMContentLoaded', function() {
+      // Expense Line Chart
+      var expenseLine = new Chart(
+        document.getElementById('expense_line').getContext('2d'),
+        {
+          type: 'line',
+          data: {
+            labels: [<?php echo $el_label; ?>],
+            datasets: [{
+              label: 'Expenses',
+              data: [<?php echo $el_dataset; ?>],
+              borderColor: '#dc3545',
+              backgroundColor: 'rgba(220, 53, 69, 0.1)',
+              borderWidth: 2,
+              tension: 0.1,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+              }
+            }
+          }
+        }
+      );
+      
+      // Expense Category Chart
+      var expenseCategory = new Chart(
+        document.getElementById('expense_category_pie').getContext('2d'),
+        {
+          type: 'doughnut',
+          data: {
+            labels: [<?php echo $ec_label; ?>],
+            datasets: [{
+              data: [<?php echo $ec_dataset; ?>],
+              backgroundColor: [
+                '#6f42c1', '#dc3545', '#28a745', '#007bff', '#ffc107',
+                '#20c997', '#17a2b8', '#fd7e14', '#e83e8c', '#6610f2'
+              ],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'right',
+              }
+            }
+          }
+        }
+      );
+      
+      // Income Line Chart
+      var incomeLine = new Chart(
+        document.getElementById('income_line').getContext('2d'),
+        {
+          type: 'line',
+          data: {
+            labels: [<?php echo $il_label; ?>],
+            datasets: [{
+              label: 'Income',
+              data: [<?php echo $il_dataset; ?>],
+              borderColor: '#28a745',
+              backgroundColor: 'rgba(40, 167, 69, 0.1)',
+              borderWidth: 2,
+              tension: 0.1,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+              }
+            }
+          }
+        }
+      );
+      
+      // Income Category Chart
+      var incomeCategory = new Chart(
+        document.getElementById('income_category_pie').getContext('2d'),
+        {
+          type: 'doughnut',
+          data: {
+            labels: [<?php echo $ic_label; ?>],
+            datasets: [{
+              data: [<?php echo $ic_dataset; ?>],
+              backgroundColor: [
+                '#007bff', '#17a2b8', '#28a745', '#20c997', '#ffc107',
+                '#fd7e14', '#e83e8c', '#6f42c1', '#dc3545', '#6610f2'
+              ],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'right',
+              }
+            }
+          }
+        }
+      );
+    });
+        </script>
