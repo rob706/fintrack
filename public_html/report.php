@@ -55,6 +55,12 @@ function generateReport($con, $userid, $period, $year, $month) {
 
 $reportData = generateReport($con, $userid, $period, $year, $month);
 
+/*
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Not Required?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 // Handle PDF generation
 if(isset($_GET['export']) && $_GET['export'] == 'pdf') {
     require_once('tcpdf/tcpdf.php');
@@ -126,6 +132,10 @@ if(isset($_GET['export']) && $_GET['export'] == 'pdf') {
     $pdf->Output('financial_report_'.$period.'_'.date('Ymd').'.pdf', 'D');
     exit;
 }
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -136,10 +146,10 @@ if(isset($_GET['export']) && $_GET['export'] == 'pdf') {
     <title>Financial Reports - Dashboard</title>
     
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="core/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Feather JS for Icons -->
-    <script src="js/feather.min.js"></script>
+    <script src="core/js/feather.min.js"></script>
     
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -632,8 +642,8 @@ if(isset($_GET['export']) && $_GET['export'] == 'pdf') {
 </div>
 
 <!-- Bootstrap core JavaScript -->
-<script src="js/jquery.slim.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<script src="core/js/jquery.slim.min.js"></script>
+<script src="core/js/bootstrap.min.js"></script>
 <script>
     // Initialize Feather Icons
     feather.replace();

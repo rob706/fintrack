@@ -1,5 +1,5 @@
 <?php
-require('config.php');
+require("../core/config.php");
 session_start();
 $errormsg = "";
 if (isset($_POST['email'])) {

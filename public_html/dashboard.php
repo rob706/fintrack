@@ -52,13 +52,13 @@ if ($time_period == 'yearly') {
   <title>Personal Finance Tracker - Dashboard</title>
   
   <!-- Bootstrap CSS -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="core/css/bootstrap.min.css" rel="stylesheet">
   
   <!-- Feather Icons -->
-  <script src="js/feather.min.js"></script>
+  <script src="core/js/feather.min.js"></script>
   
   <!-- Chart.js -->
-  <script src="js/Chart.min.js"></script>
+  <script src="core/js/Chart.min.js"></script>
   
   <style>
     :root {
@@ -570,8 +570,8 @@ if ($time_period == 'yearly') {
   </div>
 
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="js/jquery.slim.min.js"></script>
-  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="core/js/jquery.slim.min.js"></script>
+  <script src="core/js/bootstrap.bundle.min.js"></script>
   
   <script>
     // Initialize Feather Icons

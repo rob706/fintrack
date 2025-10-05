@@ -54,7 +54,7 @@ $reportData = generateReport($con, $userid, $period, $year, $month);
 
 // Handle PDF download
 if(isset($_GET['download']) && $_GET['download'] == 'true') {
-    require('fpdf186/fpdf.php');
+    require('../core/fpdf186/fpdf.php');
     
     // Create new PDF document
     $pdf = new FPDF();
@@ -124,8 +124,8 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>PDF Preview - Financial Report</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <script src="js/feather.min.js"></script>
+    <link href="core/css/bootstrap.min.css" rel="stylesheet">
+    <script src="core/js/feather.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;

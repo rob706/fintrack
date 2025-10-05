@@ -86,10 +86,10 @@ if (isset($_GET['delete'])) {
     <title>Income Manager - Dashboard</title>
     
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="core/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Feather JS for Icons -->
-    <script src="js/feather.min.js"></script>
+    <script src="core/js/feather.min.js"></script>
     
     <style>
     :root {
@@ -561,8 +561,8 @@ if (isset($_GET['delete'])) {
 </div>
 
 <!-- Bootstrap core JavaScript -->
-<script src="js/jquery.slim.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<script src="core/js/jquery.slim.min.js"></script>
+<script src="core/js/bootstrap.min.js"></script>
 <script>
     // Initialize Feather Icons
     feather.replace();
