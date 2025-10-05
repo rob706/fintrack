@@ -19,7 +19,7 @@ function generateReport($con, $userid, $period, $year, $month) {
                       FROM transactions 
                       WHERE user_id='$userid'
                       GROUP BY YEAR(date) 
-                      ORDER BY year DESC";
+                      ORDER BY year ASC";
             break;
             
         case 'monthly':
@@ -29,7 +29,7 @@ function generateReport($con, $userid, $period, $year, $month) {
                       FROM transactions 
                       WHERE user_id='$userid' AND YEAR(date) = '$year'
                       GROUP BY MONTH(date) 
-                      ORDER BY month DESC";
+                      ORDER BY month ASC";
             break;
             
         case 'weekly':
@@ -39,7 +39,7 @@ function generateReport($con, $userid, $period, $year, $month) {
                       FROM transactions
                       WHERE user_id='$userid' AND YEAR(date) = '$year' AND MONTH(date) = '$month'
                       GROUP BY WEEK(date, 1) 
-                      ORDER BY week DESC";
+                      ORDER BY week ASC";
             break;
     }
     
@@ -69,9 +69,13 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
     $pdf->SetFont('Arial','',12);
     
     // Period info
-    $periodInfo = "Year: $year";
-    if($period != 'yearly') $periodInfo .= ", Month: ".date('F', mktime(0, 0, 0, $month, 10));
-    $pdf->Cell(0,10,$periodInfo,0,1);
+    if($period != 'yearly'){
+        $periodInfo = "Year: $year";
+        if($period != 'monthly'){
+            $periodInfo .= ", Month: ".date('F', mktime(0, 0, 0, $month, 10));
+        }
+    }
+    $pdf->Cell(0,10,$periodInfo,0,1,'C');
     $pdf->Ln(5);
     
     // Table header
@@ -195,10 +199,13 @@ if(isset($_GET['download']) && $_GET['download'] == 'true') {
         <div class="report-header">
             <div class="report-title">Financial Report - <?php echo ucfirst($period); ?> View</div>
             <div class="report-period">
-                Year: <?php echo $year; ?>
-                <?php if($period != 'yearly'): ?>
-                , Month: <?php echo date('F', mktime(0, 0, 0, $month, 10)); ?>
-                <?php endif; ?>
+                <?php if($period != 'yearly'){ ?>
+                    Year: <?php echo $year; ?>
+                    <?php if($period != 'monthly'){ ?>
+                    , Month: <?php echo date('F', mktime(0, 0, 0, $month, 10)); ?>
+                <?php }
+                } ?>
+                
             </div>
         </div>
         
