@@ -5,7 +5,7 @@ if (isset($_POST['save'])) {
     $lname = $_POST['last_name'];
 
     $sql = "UPDATE users SET firstname = '$fname', lastname='$lname' WHERE user_id='$userid'";
-    if (mysqli_query($con, $sql)) {
+    if ($con_update->query($sql)) {
         echo "Records were updated successfully.";
     } else {
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($con);
@@ -28,7 +28,7 @@ if (isset($_POST['but_upload'])) {
     if (in_array($imageFileType, $extensions_arr)) {
         // Insert record
         $query = "UPDATE users SET profile_path = '$name' WHERE user_id='$userid'";
-        mysqli_query($con, $query);
+        $con_update->query($query);
 
         // Upload file
         move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name);

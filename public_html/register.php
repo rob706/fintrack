@@ -16,7 +16,7 @@ if (isset($_REQUEST['firstname'])) {
     $trn_date = date("Y-m-d H:i:s");
 
     $query = "INSERT into `users` (firstname, lastname, password, email, trn_date) VALUES ('$firstname','$lastname', '" . md5($password) . "', '$email', '$trn_date')";
-    $result = $con->query($query);
+    $result = $con_update->query($query);
     if ($result) {
       header("Location: /login.htm");
     }

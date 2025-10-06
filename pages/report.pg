@@ -48,8 +48,8 @@ function generateReport($con, $userid, $period, $year, $month) {
             break;
     }
     
-    $result = mysqli_query($con, $query);
-    while($row = mysqli_fetch_assoc($result)) {
+    $result = $con->query($query);
+    while($row = $result->fetch_assoc()) {
         $data[] = $row;
     }
     
