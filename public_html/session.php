@@ -3,8 +3,8 @@
 @include_once("./config.php");
 session_start();
 if(!isset($_SESSION["email"])){
-header("Location: /login.php");
-exit();
+  header("Location: /login.php");
+  exit();
 }
 
 $sess_email = $_SESSION["email"];
@@ -12,7 +12,7 @@ $sql = "SELECT user_id, firstname, lastname, email, profile_path FROM users WHER
 
 $result = $con->query($sql);
 
-if ($result->num_rows != 1) {
+if ($result->num_rows == 1) {
   // output data of each row
   while($row = $result->fetch_assoc()) {
     $userid=$row["user_id"];
