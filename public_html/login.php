@@ -2,22 +2,20 @@
 require("./core/config.php");
 session_start();
 $errormsg = "";
+
 if (isset($_POST['email'])) {
 
-  $email = stripslashes($_REQUEST['email']);
-  $email = $con->real_escape_string($email);
-  $password = stripslashes($_REQUEST['password']);
-  $password = $con->real_escape_string($password);
-  $query = "SELECT * FROM `users` WHERE email='$email'and password='" . md5($password) . "'";
+  $email = $con->real_escape_string(stripslashes($_POST['email']));
+  $password = $con->real_escape_string(stripslashes($_POST['password']));
+  $query = "SELECT * FROM `users` WHERE email='".$email."'and password='" . md5($password) . "'";
   $result = $con->query($query) or die($con->error);
-  $rows = $con->num_rows;
+  $rows = $result->num_rows;
   if ($rows == 1) {
     $_SESSION['email'] = $email;
     header("Location: /dashboard/");
   } else {
     $errormsg  = "Wrong";
   }
-} else {
 }
 ?>
 <!DOCTYPE html>
