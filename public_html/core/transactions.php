@@ -33,7 +33,7 @@ switch($act){
 
 }
 
-if ($con->query($sql)) {
+if ($con_update->query($sql)) {
     echo "Records were updated successfully.";
 } else {
     echo "ERROR: Could not able to execute $sql. " . $con->error();

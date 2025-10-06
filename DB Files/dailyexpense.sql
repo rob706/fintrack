@@ -1,3 +1,14 @@
+-- --------------------------------------------------------
+
+--
+-- MYSQL Manual SQL Setup Script Version 1.2
+--
+-- Last Update: 6th October 2025
+-- Update by: rob706
+--
+
+-- --------------------------------------------------------
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -42,6 +53,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 ALTER TABLE `users` ADD PRIMARY KEY (`user_id`);
+ALTER TABLE `users` ADD UNIQUE(`email`);
 ALTER TABLE `users` MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 -- --------------------------------------------------------
