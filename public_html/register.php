@@ -1,27 +1,43 @@
 <?php
 require("./core/config.php");
-if (isset($_REQUEST['firstname'])) {
-  if ($_REQUEST['password'] == $_REQUEST['confirm_password']) {
-    $firstname = stripslashes($_REQUEST['firstname']);
-    $firstname = $con->real_escape_string($firstname);
-    $lastname = stripslashes($_REQUEST['lastname']);
-    $lastname = $con->real_escape_string($lastname);
 
-    $email = stripslashes($_REQUEST['email']);
-    $email = $con->real_escape_string($email);
+if(isset($_POST['firstname'])) $firstname = $con->real_escape_string(stripslashes($_POST['firstname']));
+if(isset($_POST['lastname'])) $lastname = $con->real_escape_string(stripslashes($_POST['lastname']));
+if(isset($_POST['email'])) $email = $con->real_escape_string(stripslashes($_POST['email']));
+if(isset($_POST['password'])) $password = $con->real_escape_string(stripslashes($_POST['password']));
 
-    $password = stripslashes($_REQUEST['password']);
-    $password = $con->real_escape_string($password);
+# Check for Errors
 
-    $trn_date = date("Y-m-d H:i:s");
+$e = 0;
 
-    $query = "INSERT into `users` (firstname, lastname, password, email, trn_date) VALUES ('$firstname','$lastname', '" . md5($password) . "', '$email', '$trn_date')";
-    $result = $con_update->query($query);
-    if ($result) {
-      header("Location: /login.htm");
-    }
-  } else {
+## Check if email is already registered
+if(isset($email)){
+  $q = $con->query("Select email from users where email='".$email."'");
+  if($q->num_rows > 0){
+    echo "ERROR: Email already exists";
+    $e++;
+  }
+}
+
+## Check the passwords are the same
+
+if(isset($password)){
+  if ($_POST['password'] != $_POST['confirm_password']) {
     echo ("ERROR: Please Check Your Password & Confirmation password");
+    $e++;
+  }
+}
+
+# Process the user addition if all the fields exists and also if there are no errors
+
+if (isset($firstname) && isset($lastname) && isset($email) && isset($password) && $e==0) {
+  $trn_date = date("Y-m-d H:i:s");
+
+  $query = "INSERT into `users` (firstname, lastname, password, email, trn_date) VALUES ('".$firstname."','".$lastname."', '" . md5($password) . "', '".$email."', '".$trn_date."')";
+  $result = $con_update->query($query);
+  if ($result) {
+    header("Location: /login.htm");
+    exit();
   }
 }
 ?>
@@ -180,8 +196,6 @@ if (isset($_REQUEST['firstname'])) {
 <!-- Bootstrap core JavaScript -->
 <script src="/core/js/jquery.slim.min.js"></script>
 <script src="/core/js/bootstrap.min.js"></script>
-<!-- Croppie -->
-<script src="/core/js/profile-picture.js"></script>
 <!-- Menu Toggle Script -->
 <script>
   $("#menu-toggle").click(function(e) {
