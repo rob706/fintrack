@@ -22,6 +22,6 @@ $con_update = mysqli_connect($db_server,$db_update_user,$db_update_pass,$db_name
 
 if (mysqli_connect_errno())
   {
-  echo "Failed to connect to MySQL: " . mysqli_connect_error() ." | Seems like you haven't created the DATABASE with an exact name";
+  echo "Failed to connect to MySQL: " . mysqli_connect_error();
   }
 ?>
