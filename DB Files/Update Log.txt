@@ -24,3 +24,14 @@ Database File Version Log
     drop table if exists expenses;
     drop table if exists income;
 
+- v1.2 - Update Security by changing how the database connections work - rob706 - 6th October 2025
+    The below sql needs to be ran to keep the tables in line
+
+    [MySQL]
+
+    ALTER TABLE `users` ADD UNIQUE(`email`);
+
+    You also need to update the config file to mirror the additional security users and also amended connection method
+
+    - You need to create a user which only has read access on all non development environments to enhance the security of the solution
+
