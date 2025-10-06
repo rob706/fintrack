@@ -12,8 +12,8 @@ $db_update_pass = "";
 
 ## Credentials for Read Only User
 
-$db_read_user = $db_write_user;
-$db_read_pass = $db_read_pass;
+$db_read_user = $db_update_user;
+$db_read_pass = $db_update_pass;
 
 #### Do not edit below this line ###
 
