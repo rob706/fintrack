@@ -1,0 +1,1 @@
+This folder is where all the user uploads will be stored, this will also allow for better seperation of files and also protect anything uploaded from being directly accessible from the browser as all interaction would be from within the php scripts themselves

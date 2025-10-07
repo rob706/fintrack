@@ -4,4 +4,4 @@ public_html/uploads/*
 !public_html/uploads/default_profile.png
 
 uploads/*
-!uploads/
+!uploads/info.txt
