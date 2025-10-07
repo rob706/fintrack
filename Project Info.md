@@ -8,9 +8,9 @@
 ## Amendments & Enhancements (Contributors)
 
 - SanjayPravin - https://github.com/sanjaypravin
-- Rob706 - https://github.com/rob706
+- rob706 - https://github.com/rob706
 
 ## Gitub Project Details
 
 - SanjayPravin - https://github.com/sanjaypravin/personal_finance_tracker
-- Rob706 - https://github.com/rob706/fintrack
+- rob706 - https://github.com/rob706/fintrack

@@ -48,14 +48,16 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
               // Modify the query to include date filtering
               $query = "
                 select
-                  * 
+                  t.*,
+                  c.category_name as category
                 from
-                  transactions 
+                  transactions as t
+                  inner join category as c on c.category_id = t.category_id
                 where
-                  user_id = '$userid'
-                  and date between '".$start_date."' and '".$end_date."'
+                  t.user_id = '$userid'
+                  and t.date between '".$start_date."' and '".$end_date."'
                 order by
-                  date, category, value";
+                  t.date, c.category_name, t.value";
               $exp_fetched = $con->query($query);
               while ($row = $exp_fetched->fetch_array()) {
               ?>

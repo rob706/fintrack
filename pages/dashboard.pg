@@ -11,8 +11,8 @@ if ($time_period == 'yearly') {
     $q_inc_line = "SELECT YEAR(date) as period, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY YEAR(date)";
 
     // Yearly category data
-    $q_exp_dc = "SELECT category as expensecategory, SUM(value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 GROUP BY category";
-    $q_inc_dc = "SELECT category as incomecategory, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY category";
+    $q_exp_dc = "SELECT c.category_name as expensecategory, SUM(t.value) as expense FROM transactions as t left join category as c on c.category_id = t.category_id WHERE t.user_id = '$userid' and t.value <= 0 GROUP BY c.category_name";
+    $q_inc_dc = "SELECT c.category_name as incomecategory, SUM(t.value) as income FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value >= 0 GROUP BY c.category_name";
 
 } elseif ($time_period == 'weekly') {
 
@@ -21,8 +21,8 @@ if ($time_period == 'yearly') {
     $q_inc_line = "SELECT CONCAT(YEAR(date), '-W', WEEK(date)) as period, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY YEAR(date), WEEK(date)";
 
     // Weekly category data
-    $q_exp_dc = "SELECT category as expensecategory, SUM(-value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 AND YEAR(date) = YEAR(CURDATE()) AND WEEK(date) = WEEK(CURDATE()) GROUP BY category";
-    $q_inc_dc = "SELECT category as incomecategory, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 AND YEAR(date) = YEAR(CURDATE()) AND WEEK(date) = WEEK(CURDATE()) GROUP BY category";
+    $q_exp_dc = "SELECT c.category_name as expensecategory, SUM(-t.value) as expense FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value <= 0 AND YEAR(t.date) = YEAR(CURDATE()) AND WEEK(t.date) = WEEK(CURDATE()) GROUP BY c.category_name";
+    $q_inc_dc = "SELECT c.category_name as incomecategory, SUM(t.value) as income FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value >= 0 AND YEAR(t.date) = YEAR(CURDATE()) AND WEEK(t.date) = WEEK(CURDATE()) GROUP BY c.category_name";
 
 } else {
 
@@ -31,8 +31,8 @@ if ($time_period == 'yearly') {
     $q_inc_line = "SELECT DATE_FORMAT(date, '%Y-%m') as period, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY DATE_FORMAT(date, '%Y-%m')";
 
     // Monthly category data
-    $q_exp_dc = "SELECT category as expensecategory, SUM(-value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 AND DATE_FORMAT(date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY category";
-    $q_inc_dc = "SELECT category as incomecategory, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 AND DATE_FORMAT(date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY category";
+    $q_exp_dc = "SELECT c.category_name as expensecategory, SUM(-t.value) as expense FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value <= 0 AND DATE_FORMAT(t.date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY c.category_name";
+    $q_inc_dc = "SELECT c.category_name as incomecategory, SUM(t.value) as income FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value >= 0 AND DATE_FORMAT(t.date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY c.category_name";
 
 }
 
@@ -88,34 +88,18 @@ if ($time_period == 'yearly') {
               <div class="card-body p-2">
                 <div class="row text-center">
                   <div class="col">
-                    <a href="/dashboard/add_expense.htm" class="text-decoration-none">
+                    <a href="/dashboard/transaction/add.htm" class="text-decoration-none">
                       <div class="quick-action">
                         <span data-feather="plus-circle" class="text-primary"></span>
-                        <p class="mt-1 mb-0">Add Expense</p>
+                        <p class="mt-1 mb-0">Add Transaction</p>
                       </div>
                     </a>
                   </div>
                   <div class="col">
-                    <a href="/dashboard/manage_expense.htm" class="text-decoration-none">
+                    <a href="/dashboard/transaction.htm" class="text-decoration-none">
                       <div class="quick-action">
                         <span data-feather="edit" class="text-success"></span>
-                        <p class="mt-1 mb-0">Manage Expenses</p>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="col">
-                    <a href="/dashboard/add_income.htm" class="text-decoration-none">
-                      <div class="quick-action">
-                        <span data-feather="plus-circle" class="text-primary"></span>
-                        <p class="mt-1 mb-0">Add Income</p>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="col">
-                    <a href="/dashboard/manage_income.htm" class="text-decoration-none">
-                      <div class="quick-action">
-                        <span data-feather="edit" class="text-success"></span>
-                        <p class="mt-1 mb-0">Manage Income</p>
+                        <p class="mt-1 mb-0">Manage Transactions</p>
                       </div>
                     </a>
                   </div>

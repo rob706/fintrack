@@ -33,5 +33,54 @@ Database File Version Log
 
     You also need to update the config file to mirror the additional security users and also amended connection method
 
-    - You need to create a user which only has read access on all non development environments to enhance the security of the solution
+    ** You need to create a user which only has read access on all non development environments to enhance the security of the solution **
+
+- v1.3 - Update to include Category mappings
+    The below sql needs to be ran to convert the category names into thier related id's
+
+    This will create a new table and then load in any new user defined categories before then converting the current categories to id numbers and changing the column type
+
+    [MySQL]
+
+    -- Create New Categories Table
+
+    CREATE TABLE `category` (
+    `category_id` int(11) NOT NULL AUTO_INCREMENT,
+    `category_name` varchar(50) NOT NULL,
+    `user_id` int(11) NOT NULL DEFAULT 0,
+    `income` tinyint(1) NOT NULL DEFAULT 0,
+    `expense` tinyint(1) NOT NULL DEFAULT 0,
+    `active` tinyint(1) NOT NULL DEFAULT 1,
+
+    PRIMARY KEY (`category_id`),
+    UNIQUE KEY `category_name` (`category_name`,`user_id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+    -- Add default categories
+
+    INSERT INTO `category` (`category_name`, `user_id`, `income`, `expense`, `active`) VALUES
+    ('Salary', 0, 1, 0, 1),
+    ('Rent', 0, 0, 1, 1),
+    ('Loan', 0, 1, 1, 1),
+    ('Investment', 0, 1, 0, 1),
+    ('Insurance', 0, 0, 1, 1),
+    ('Gift', 0, 1, 1, 1),
+    ('Gas', 0, 0, 1, 1),
+    ('Freelance', 0, 1, 0, 1),
+    ('Electricity', 0, 0, 1, 1),
+    ('Bonus', 0, 1, 0, 1),
+    ('Other', 0, 1, 1, 1);
+
+    -- Add any custom categories to the list
+
+    insert into category (`category_name`,`user_id`,`income`,`expense`)
+    SELECT t.category, t.user_id, case when sum(t.value) < 0 then 0 else 1 end as income, case when sum(t.value) < 0 then 1 else 0 end as expense FROM `transactions` as t left join category as c on t.category = c.category_name and c.user_id in (0,t.user_id) where c.category_id is null group by t.category, t.user_id;
+
+    -- Convert the categories on the transactions table
+
+    update transactions as t inner join category as c on c.category_name = t.category and c.user_id in (0,t.user_id) set t.category = c.category_id;
+
+    -- Change the table structure to a new one
+
+    ALTER TABLE `transactions` CHANGE `category` `category_id` INT(11) NOT NULL;
 

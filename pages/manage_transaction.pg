@@ -13,7 +13,7 @@ if(isset($_GET['act'])){
       $n = $record->fetch_array();
       $trans_amount = $n['value'];
       $trans_date = $n['date'];
-      $trans_category = $n['category'];
+      $trans_category = $n['category_id'];
       
       if($trans_amount <= 0){
         $trans_type = "expense";
@@ -27,6 +27,12 @@ if(isset($_GET['act'])){
       echo ("WARNING: AUTHORIZATION ERROR: Trying to Access Unauthorized data");
   }
 }
+
+$q_cat = $con->query("select category_id, category_name from category where user_id in (0,".$userid.") and active = 1 order by category_name");
+
+$q_oth = $con->query("select category_id, category_name from category where category_name='Other' and active = 1 order by category_name");
+
+$oth = $q_oth->fetch_assoc();
 
 switch($act){
 
@@ -82,19 +88,15 @@ switch($act){
                                 <div class="col-md">
                                     <!-- Dropdown Menu -->
                                     <select id="categoryDropdown" name="trans_category" class="form-control" onchange="toggleOtherInput(this)">
-                                        <option value="x" disabled>---Income---</option>
-                                        <option value="Salary" <?php if($trans_category == "Salary") echo "selected"; ?>>Salary</option>
-                                        <option value="Freelance" <?php if($trans_category == "Freelance") echo "selected"; ?>>Freelance</option>
-                                        <option value="Investment" <?php if($trans_category == "Investment") echo "selected"; ?>>Investment</option>
-                                        <option value="Gift" <?php if($trans_category == "Gift") echo "selected"; ?>>Gift</option>
-                                        <option value="Bonus" <?php if($trans_category == "Bonus") echo "selected"; ?>>Bonus</option>
-                                        <option value="x" disabled>---Expenses---</option>
-                                        <option value="Electricity" <?php if($trans_category == "Electricity") echo "selected"; ?>>Electricity</option>
-                                        <option value="Rent" <?php if($trans_category == "Rent") echo "selected"; ?>>Rent</option>
-                                        <option value="Insurance" <?php if($trans_category == "Insurance") echo "selected"; ?>>Insurance</option>
-                                        <option value="Loan" <?php if($trans_category == "Loan") echo "selected"; ?>>Loan</option>
-                                        <option value="Gas" <?php if($trans_category == "Gas") echo "selected"; ?>>Gas</option>
-                                        <option value="Other">Other</option>
+                                        <option value="x" disabled<?php if($action == "Add") echo " selected";?>>-</option>
+                                        <?php
+                                            while($cat = $q_cat->fetch_assoc()){
+                                                print_r($cat);
+                                                echo "<option value=\"".$cat['category_id']."\"";
+                                                if($trans_category == $cat['category_id']) echo " selected"; 
+                                                echo ">".$cat['category_name']."</option>";
+                                            }
+                                        ?>
                                     </select>
                                     <!-- Text Box (Hidden by Default) -->
                                     <div id="otherInputContainer" class="d-none mt-2">
@@ -186,7 +188,7 @@ switch($act){
         const otherInputContainer = document.getElementById('otherInputContainer');
         const otherInput = document.getElementById('otherInput');
 
-        if (select.value === 'Other') {
+        if (select.value === '<?php echo $oth['category_id']; ?>') {
             otherInputContainer.classList.remove('d-none'); // Show the text box
             otherInput.setAttribute("required", "true"); // Make it required
         } else {
