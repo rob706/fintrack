@@ -11,8 +11,8 @@ if ($time_period == 'yearly') {
     $q_inc_line = "SELECT YEAR(date) as period, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY YEAR(date)";
 
     // Yearly category data
-    $q_exp_dc = "SELECT category as expensecategory, SUM(value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 GROUP BY category";
-    $q_inc_dc = "SELECT category as incomecategory, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY category";
+    $q_exp_dc = "SELECT c.category_name as expensecategory, SUM(t.value) as expense FROM transactions as t left join category as c on c.category_id = t.category_id WHERE t.user_id = '$userid' and t.value <= 0 GROUP BY c.category_name";
+    $q_inc_dc = "SELECT c.category_name as incomecategory, SUM(t.value) as income FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value >= 0 GROUP BY c.category_name";
 
 } elseif ($time_period == 'weekly') {
 
@@ -21,8 +21,8 @@ if ($time_period == 'yearly') {
     $q_inc_line = "SELECT CONCAT(YEAR(date), '-W', WEEK(date)) as period, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY YEAR(date), WEEK(date)";
 
     // Weekly category data
-    $q_exp_dc = "SELECT category as expensecategory, SUM(-value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 AND YEAR(date) = YEAR(CURDATE()) AND WEEK(date) = WEEK(CURDATE()) GROUP BY category";
-    $q_inc_dc = "SELECT category as incomecategory, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 AND YEAR(date) = YEAR(CURDATE()) AND WEEK(date) = WEEK(CURDATE()) GROUP BY category";
+    $q_exp_dc = "SELECT c.category_name as expensecategory, SUM(-t.value) as expense FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value <= 0 AND YEAR(t.date) = YEAR(CURDATE()) AND WEEK(t.date) = WEEK(CURDATE()) GROUP BY c.category_name";
+    $q_inc_dc = "SELECT c.category_name as incomecategory, SUM(t.value) as income FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value >= 0 AND YEAR(t.date) = YEAR(CURDATE()) AND WEEK(t.date) = WEEK(CURDATE()) GROUP BY c.category_name";
 
 } else {
 
@@ -31,8 +31,8 @@ if ($time_period == 'yearly') {
     $q_inc_line = "SELECT DATE_FORMAT(date, '%Y-%m') as period, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY DATE_FORMAT(date, '%Y-%m')";
 
     // Monthly category data
-    $q_exp_dc = "SELECT category as expensecategory, SUM(-value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 AND DATE_FORMAT(date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY category";
-    $q_inc_dc = "SELECT category as incomecategory, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 AND DATE_FORMAT(date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY category";
+    $q_exp_dc = "SELECT c.category_name as expensecategory, SUM(-t.value) as expense FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value <= 0 AND DATE_FORMAT(t.date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY c.category_name";
+    $q_inc_dc = "SELECT c.category_name as incomecategory, SUM(t.value) as income FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value >= 0 AND DATE_FORMAT(t.date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY c.category_name";
 
 }
 
