@@ -88,34 +88,18 @@ if ($time_period == 'yearly') {
               <div class="card-body p-2">
                 <div class="row text-center">
                   <div class="col">
-                    <a href="/dashboard/add_expense.htm" class="text-decoration-none">
+                    <a href="/dashboard/transaction/add.htm" class="text-decoration-none">
                       <div class="quick-action">
                         <span data-feather="plus-circle" class="text-primary"></span>
-                        <p class="mt-1 mb-0">Add Expense</p>
+                        <p class="mt-1 mb-0">Add Transaction</p>
                       </div>
                     </a>
                   </div>
                   <div class="col">
-                    <a href="/dashboard/manage_expense.htm" class="text-decoration-none">
+                    <a href="/dashboard/transaction.htm" class="text-decoration-none">
                       <div class="quick-action">
                         <span data-feather="edit" class="text-success"></span>
-                        <p class="mt-1 mb-0">Manage Expenses</p>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="col">
-                    <a href="/dashboard/add_income.htm" class="text-decoration-none">
-                      <div class="quick-action">
-                        <span data-feather="plus-circle" class="text-primary"></span>
-                        <p class="mt-1 mb-0">Add Income</p>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="col">
-                    <a href="/dashboard/manage_income.htm" class="text-decoration-none">
-                      <div class="quick-action">
-                        <span data-feather="edit" class="text-success"></span>
-                        <p class="mt-1 mb-0">Manage Income</p>
+                        <p class="mt-1 mb-0">Manage Transactions</p>
                       </div>
                     </a>
                   </div>
