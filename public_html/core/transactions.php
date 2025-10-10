@@ -17,7 +17,7 @@ if($trans_type == "expense") $trans_amount = $trans_amount * -1;
 
 ## Check if the Custom Category already exists and if not create the category
 
-if(isset($trans_customcategory)){
+if(!empty($trans_customcategory)){
     $q_cat = $con->query("select category_id from category where category_name = '".$trans_customcategory."' and user_id in (0,".$userid.") limit 1");
 
     if($q_cat->num_rows == 0){

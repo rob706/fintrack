@@ -28,7 +28,7 @@ if(isset($_GET['act'])){
   }
 }
 
-$q_cat = $con->query("select category_id, category_name from category where user_id in (0,".$userid.") and expense = 1 and active = 1 order by category_name");
+$q_cat = $con->query("select category_id, category_name from category where user_id in (0,".$userid.") and ".$trans_type." = 1 and active = 1 order by category_name");
 
 $q_oth = $con->query("select category_id, category_name from category where category_name='Other' and active = 1 order by category_name");
 
