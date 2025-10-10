@@ -28,7 +28,7 @@ if(isset($_GET['act'])){
   }
 }
 
-$q_cat = $con->query("select category_id, category_name from category where user_id in (0,".$userid.") and active = 1 order by category_name");
+$q_cat = $con->query("select category_id, category_name from category where user_id in (0,".$userid.") and expense = 1 and active = 1 order by category_name");
 
 $q_oth = $con->query("select category_id, category_name from category where category_name='Other' and active = 1 order by category_name");
 
@@ -62,7 +62,7 @@ switch($act){
                             <div class="form-group row">
                                 <label for="trans_type" class="col-sm-6 col-form-label"><b>Transaction Type</b></label>
                                 <div class="col-md-6">
-                                    <select id="trans_type" class="form-control" name="trans_type">
+                                    <select id="trans_type" class="form-control" onchange="changeCat(this.value)" name="trans_type">
                                         <option value="income" <?php if($trans_type == "income") echo "selected"; ?>>Income</option>
                                         <option value="expense" <?php if($trans_type != "income") echo "selected"; ?>>Expense</option>
                                     </select>
@@ -88,10 +88,8 @@ switch($act){
                                 <div class="col-md">
                                     <!-- Dropdown Menu -->
                                     <select id="categoryDropdown" name="trans_category" class="form-control" onchange="toggleOtherInput(this)">
-                                        <option value="x" disabled<?php if($action == "Add") echo " selected";?>>-</option>
                                         <?php
                                             while($cat = $q_cat->fetch_assoc()){
-                                                print_r($cat);
                                                 echo "<option value=\"".$cat['category_id']."\"";
                                                 if($trans_category == $cat['category_id']) echo " selected"; 
                                                 echo ">".$cat['category_name']."</option>";
@@ -216,4 +214,51 @@ switch($act){
         console.log("Selected Category:", dropdown.value); // Debugging
         return true; // Allow form submission
     }
+
+    function changeCat(value)
+        {
+            const otherInputContainer = document.getElementById('otherInputContainer');
+            const otherInput = document.getElementById('otherInput');
+
+            otherInputContainer.classList.add('d-none'); // Hide the text box
+            otherInput.removeAttribute("required"); // Remove required if another category is chosen
+            otherInput.value = ""; // Clear text input
+
+            var dropdown = $('#categoryDropdown');
+            
+            if(value == 'income'){
+                dropdown.html(<?php
+
+                    echo "'";
+
+                    $q_cat = $con->query("select category_id, category_name from category where user_id in (0,".$userid.") and income = 1 and active = 1 order by category_name");
+
+                        while($cat = $q_cat->fetch_assoc()){
+                            echo "<option value=\"".$cat['category_id']."\"";
+                            if($trans_category == $cat['category_id']) echo " selected"; 
+                            echo ">".$cat['category_name']."</option>";
+                        }
+
+                    echo "'";
+
+                    ?>);
+            } else {
+                dropdown.html(<?php
+
+                    echo "'";
+
+                    $q_cat = $con->query("select category_id, category_name from category where user_id in (0,".$userid.") and expense = 1 and active = 1 order by category_name");
+
+                    while($cat = $q_cat->fetch_assoc()){
+                        echo "<option value=\"".$cat['category_id']."\"";
+                        if($trans_category == $cat['category_id']) echo " selected"; 
+                        echo ">".$cat['category_name']."</option>";
+                    }
+
+                    echo "'";
+                    
+                ?>);
+            }
+
+        }
 </script>

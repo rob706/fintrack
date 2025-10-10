@@ -96,8 +96,8 @@ $page = "../pages/".$pg.".pg";
   </div>
 
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="core/js/jquery.slim.min.js"></script>
-  <script src="core/js/bootstrap.bundle.min.js"></script>
+  <script src="/core/js/jquery.slim.min.js"></script>
+  <script src="/core/js/bootstrap.bundle.min.js"></script>
   
   <script>
     // Initialize Feather Icons
