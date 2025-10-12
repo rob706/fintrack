@@ -1,9 +1,9 @@
 -- --------------------------------------------------------
 
 --
--- MYSQL Manual SQL Setup Script Version 1.3
+-- MYSQL Manual SQL Setup Script Version 1.4
 --
--- Last Update: 7th October 2025
+-- Last Update: 12th October 2025
 -- Update by: rob706
 --
 
@@ -26,8 +26,9 @@ SET time_zone = "+00:00";
 CREATE TABLE `transactions` (
   `transaction_id` int(20) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(15) NOT NULL,
-  `date` varchar(15) NOT NULL,
+  `date` date NOT NULL,
   `category_id` int(11) NOT NULL,
+  `account_id` INT NOT NULL,
   `value` int(20) NOT NULL,
 
   PRIMARY KEY (`transaction_id`)
@@ -87,6 +88,51 @@ INSERT INTO `category` (`category_name`, `user_id`, `income`, `expense`, `active
 ('Freelance', 0, 1, 0, 1),
 ('Electricity', 0, 0, 1, 1),
 ('Bonus', 0, 1, 0, 1),
-('Other', 0, 1, 1, 1);
+('Other', 0, 1, 1, 1),
+('Internal Transfer', 0, 1, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accounts`
+--
+
+CREATE TABLE `accounts` (
+  `account_id` int(11) NOT NULL AUTO_INCREMENT,
+  `account_name` varchar(50) NOT NULL,
+  `account_type` int(11) NOT NULL,
+  `user_id` INT NOT NULL,
+  `active` int(4) NOT NULL DEFAULT 1,
+
+  PRIMARY KEY (`account_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `account_type`
+--
+
+CREATE TABLE `account_type` (
+    `type_id` INT NOT NULL AUTO_INCREMENT,
+    `type_name` VARCHAR(50) NOT NULL,
+    `classification` VARCHAR(50) NOT NULL,
+    `pl` INT(4) NOT NULL DEFAULT '0' COMMENT 'Profit & Loss',
+    
+    PRIMARY KEY (`type_id`),
+    UNIQUE (`type_name`)
+)ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Add default categories for table `account_types`
+--
+
+INSERT INTO `account_type` (`type_name`, `classification`, `pl`) VALUES
+('Real Estate', 'Asset', 0),
+('Investment', 'Asset', 0),
+('Bank / Savings Account', 'Equity', 1),
+('Loan', 'Liability', 0),
+('Pension', 'Asset', 0),
+('Credit Card', 'Liability', 1);
 
 -- --------------------------------------------------------
