@@ -41,7 +41,7 @@ $page = "../pages/".$pg.".pg";
         <a href="/dashboard" class="list-group-item list-group-item-action <?php if($pg=="dashboard") echo "sidebar-active"; ?>">
           <span data-feather="home"></span> Dashboard
         </a>
-        <a href="/dashboard/assets.htm" class="list-group-item list-group-item-action <?php if($pg=="assets" || $pg=="manage_assets") echo "sidebar-active"; ?>">
+        <?php /*<a href="/dashboard/assets.htm" class="list-group-item list-group-item-action <?php if($pg=="assets" || $pg=="manage_assets") echo "sidebar-active"; ?>">
           <span data-feather="home"></span> Assets
         </a>
         <a href="/dashboard/loans.htm" class="list-group-item list-group-item-action <?php if($pg=="loans" || $pg=="manage_loans") echo "sidebar-active"; ?>">
@@ -49,7 +49,7 @@ $page = "../pages/".$pg.".pg";
         </a>
         <a href="/dashboard/investments.htm" class="list-group-item list-group-item-action <?php if($pg=="investments" || $pg=="manage_investments") echo "sidebar-active"; ?>">
           <span data-feather="dollar-sign"></span> Investments
-        </a>
+        </a> */ ?>
         <a href="/dashboard/transaction/new/add.htm" class="list-group-item list-group-item-action <?php if($pg=="manage_transaction" && !isset($_GET['act'])) echo "sidebar-active"; ?>">
           <span data-feather="plus-circle"></span> Add Transaction
         </a>
