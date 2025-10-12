@@ -16,7 +16,10 @@ Built with **HTML, CSS, JavaScript (Frontend)** and **PHP with MySQL (Backend)**
   - Record and categorize transactions.
   
 **Reports**  
-  - View reports by **daily, monthly, yearly, or category-wise**.
+  - View reports by:
+    - Daily
+    - Monthly
+    - Yearly
   - Includes flowcharts/graphs for better financial insights.
   
 ---
