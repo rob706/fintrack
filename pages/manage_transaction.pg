@@ -3,7 +3,8 @@
 $act = "";
 $id = 0;
 if(isset($_GET['act'])) $act=$_GET['act'];
-$trans_type = $trans_category = $trans_amount = "";
+$trans_type = "expense";
+$trans_category = $trans_amount = "";
 $trans_date = date("Y-m-d");
 
 if(isset($_GET['act'])){
