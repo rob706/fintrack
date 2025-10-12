@@ -23,7 +23,7 @@ $page = "../pages/".$pg.".pg";
   <script src="/core/js/feather.min.js"></script>
   
   <!-- Chart.js -->
-  <script src="/core/js/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <link rel="stylesheet" href="/core/css/style.css">
 </head>
