@@ -10,6 +10,7 @@ if(isset($_POST['trans_category'])) $trans_category = $con->real_escape_string($
 if(isset($_POST['trans_type'])) $trans_type = $con->real_escape_string($_POST['trans_type']);
 if(isset($_POST['customCategory'])) $trans_customcategory = $con->real_escape_string($_POST['customCategory']);
 if(isset($_POST['id'])) $id = $con->real_escape_string($_POST['id']);
+if(isset($_POST['trans_account'])) $trans_account = $con->real_escape_string($_POST['trans_account']);
 
 ## Flip the Signs on Expenses so they are processed as Negatives
 
@@ -37,15 +38,15 @@ switch($act){
         break;
 
     case 'add':
-        $sql = "INSERT INTO transactions (user_id, date, category_id, value) VALUES ('$userid','$trans_date','$trans_category', '$trans_amount')";
+        $sql = "INSERT INTO transactions (user_id, account_id, date, category_id, value) VALUES ('".$userid."','".$trans_account."','".$trans_date."','".$trans_category."', '".$trans_amount."')";
         break;
     
     case 'edit':
-        $sql = "UPDATE transactions SET value='$trans_amount', date='$trans_date', category_id='$trans_category' WHERE user_id='$userid' AND transaction_id='$id'";
+        $sql = "UPDATE transactions SET value='".$trans_amount."', date='".$trans_date."', category_id='".$trans_category."' and account_id='".$trans_account."' WHERE user_id='".$userid."' AND transaction_id='".$id."'";
         break;
 
     case 'delete':
-        $sql = "DELETE FROM transactions WHERE user_id='$userid' AND transaction_id='$id'";
+        $sql = "DELETE FROM transactions WHERE user_id='".$userid."' AND transaction_id='".$id."'";
         break;
 
 }
@@ -53,11 +54,11 @@ switch($act){
 if ($con_update->query($sql)) {
     echo "Records were updated successfully.";
 } else {
-    echo "ERROR: Could not able to execute $sql. " . $con->error();
+    echo "ERROR: Could not able to execute ".$sql."<br />" . $con->error();
 }
 
 #print_r($_POST);
 
-header('location: /dashboard/transaction.htm');
+header("location: /dashboard/".$trans_account."/transaction.htm");
 
 ?>

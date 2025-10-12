@@ -7,11 +7,11 @@ $time_period = isset($_GET['period']) ? $_GET['period'] : 'monthly';
 if ($time_period == 'yearly') {
 
     // Yearly trend data
-    $q_exp_line = "SELECT YEAR(date) as period, SUM(value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 GROUP BY YEAR(date)";
+    $q_exp_line = "SELECT YEAR(date) as period, -SUM(value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 GROUP BY YEAR(date)";
     $q_inc_line = "SELECT YEAR(date) as period, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY YEAR(date)";
 
     // Yearly category data
-    $q_exp_dc = "SELECT c.category_name as expensecategory, SUM(t.value) as expense FROM transactions as t left join category as c on c.category_id = t.category_id WHERE t.user_id = '$userid' and t.value <= 0 GROUP BY c.category_name";
+    $q_exp_dc = "SELECT c.category_name as expensecategory, -SUM(t.value) as expense FROM transactions as t left join category as c on c.category_id = t.category_id WHERE t.user_id = '$userid' and t.value <= 0 GROUP BY c.category_name";
     $q_inc_dc = "SELECT c.category_name as incomecategory, SUM(t.value) as income FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value >= 0 GROUP BY c.category_name";
 
 } elseif ($time_period == 'weekly') {
@@ -226,7 +226,13 @@ if ($time_period == 'yearly') {
             maintainAspectRatio: false,
             plugins: {
               legend: {
-                position: 'top',
+                position: 'top'
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                Min: 0
               }
             }
           }
@@ -254,7 +260,7 @@ if ($time_period == 'yearly') {
             maintainAspectRatio: false,
             plugins: {
               legend: {
-                position: 'right',
+                position: 'right'
               }
             }
           }
@@ -283,7 +289,13 @@ if ($time_period == 'yearly') {
             maintainAspectRatio: false,
             plugins: {
               legend: {
-                position: 'top',
+                position: 'top'
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                Min: 0
               }
             }
           }
@@ -311,7 +323,7 @@ if ($time_period == 'yearly') {
             maintainAspectRatio: false,
             plugins: {
               legend: {
-                position: 'right',
+                position: 'right'
               }
             }
           }
