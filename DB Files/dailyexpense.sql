@@ -3,7 +3,7 @@
 --
 -- MYSQL Manual SQL Setup Script Version 1.3
 --
--- Last Update: 6th October 2025
+-- Last Update: 7th October 2025
 -- Update by: rob706
 --
 
