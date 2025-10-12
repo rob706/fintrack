@@ -35,7 +35,7 @@ Database File Version Log
 
     ** You need to create a user which only has read access on all non development environments to enhance the security of the solution **
 
-- v1.3 - Update to include Category mappings
+- v1.3 - Update to include Category mappings - rob706 - 7th October 2025
     The below sql needs to be ran to convert the category names into thier related id's
 
     This will create a new table and then load in any new user defined categories before then converting the current categories to id numbers and changing the column type
