@@ -50,7 +50,7 @@ $page = "../pages/".$pg.".pg";
         <a href="/dashboard/investments.htm" class="list-group-item list-group-item-action <?php if($pg=="investments" || $pg=="manage_investments") echo "sidebar-active"; ?>">
           <span data-feather="dollar-sign"></span> Investments
         </a>
-        <a href="/dashboard/transaction/add.htm" class="list-group-item list-group-item-action <?php if($pg=="manage_transaction" && !isset($_GET['act'])) echo "sidebar-active"; ?>">
+        <a href="/dashboard/transaction/new/add.htm" class="list-group-item list-group-item-action <?php if($pg=="manage_transaction" && !isset($_GET['act'])) echo "sidebar-active"; ?>">
           <span data-feather="plus-circle"></span> Add Transaction
         </a>
         <a href="/dashboard/transaction.htm" class="list-group-item list-group-item-action <?php if($pg=="transaction" || ($pg=="manage_transaction" && isset($_GET['act']))) echo "sidebar-active"; ?>">

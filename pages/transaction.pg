@@ -54,7 +54,7 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
                   transactions as t
                   inner join category as c on c.category_id = t.category_id
                 where
-                  t.user_id = '$userid'
+                  t.user_id = '".$userid."'
                   and t.date between '".$start_date."' and '".$end_date."'
                 order by
                   t.date, c.category_name, t.value";
@@ -67,10 +67,10 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
                 <td><?php echo $row['category']; ?></td>
                 <td><?php echo $row['value']; ?></td>
                 <td class="text-center">
-                  <a href="./transaction/edit/<?php echo $row['transaction_id']; ?>.htm" class="btn btn-primary btn-sm" style="border-radius:0%;">Edit</a>
+                  <a href="/dashboard/transaction/edit/<?php echo $row['transaction_id']; ?>.htm" class="btn btn-primary btn-sm" style="border-radius:0%;">Edit</a>
                 </td>
                 <td class="text-center">
-                  <a href="./transaction/delete/<?php echo $row['transaction_id']; ?>.htm" class="btn btn-danger btn-sm" style="border-radius:0%;">Delete</a>
+                  <a href="/dashboard/transaction/delete/<?php echo $row['transaction_id']; ?>.htm" class="btn btn-danger btn-sm" style="border-radius:0%;">Delete</a>
                 </td>
               </tr>
               <?php } ?>
