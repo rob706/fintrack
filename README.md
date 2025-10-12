@@ -6,16 +6,16 @@ Built with **HTML, CSS, JavaScript (Frontend)** and **PHP with MySQL (Backend)**
 ---
 
 ##  Features
--  **User Authentication**  
+**User Authentication**  
   - Register, Login, and Forgot Password functionality.
   
--  **Dashboard**  
+**Dashboard**  
   - Personalized user dashboard with financial overview.
   
--  **Add Income & Expenses**  
+**Add Income & Expenses**  
   - Record and categorize transactions.
   
--  **Reports**  
+**Reports**  
   - View reports by **daily, monthly, yearly, or category-wise**.
   - Includes flowcharts/graphs for better financial insights.
   
