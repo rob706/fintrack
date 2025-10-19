@@ -17,33 +17,33 @@ function generateReport($con, $userid, $period, $year, $month) {
         case 'yearly':
             // Yearly report - don't need month parameter
             $query = "SELECT YEAR(date) as year, 
-                      sum(case when value >= 0 then value else 0 end) as total_income,
-                      sum(case when value <= 0 then value else 0 end) as total_expense
-                      FROM transactions 
-                      WHERE user_id='$userid'
-                      GROUP BY YEAR(date) 
+                      sum(case when t.value >= 0 then t.value else 0 end) as total_income,
+                      sum(case when t.value <= 0 then t.value else 0 end) as total_expense
+                      FROM transactions as t inner join category as c on c.category_id = t.category_id 
+                      WHERE t.user_id='$userid' and c.category_name not in ('Internal Transfer') 
+                      GROUP BY YEAR(t.date) 
                       ORDER BY year ASC";
             break;
             
         case 'monthly':
             // Monthly report for selected year
             $query = "SELECT MONTH(date) as month, 
-                      sum(case when value >= 0 then value else 0 end) as total_income,
-                      sum(case when value <= 0 then value else 0 end) as total_expense
-                      FROM transactions 
-                      WHERE user_id='$userid' AND YEAR(date) = '$year'
-                      GROUP BY MONTH(date) 
+                      sum(case when t.value >= 0 then t.value else 0 end) as total_income,
+                      sum(case when t.value <= 0 then t.value else 0 end) as total_expense
+                      FROM transactions as t inner join category as c on c.category_id = t.category_id 
+                      WHERE t.user_id='$userid' AND YEAR(t.date) = '$year' and c.category_name not in ('Internal Transfer') 
+                      GROUP BY MONTH(t.date) 
                       ORDER BY month ASC";
             break;
             
         case 'weekly':
             // Weekly report for selected month
             $query = "SELECT WEEK(date, 1) as week, 
-                      sum(case when value >= 0 then value else 0 end) as total_income,
-                      sum(case when value <= 0 then value else 0 end) as total_expense
-                      FROM transactions
-                      WHERE user_id='$userid' AND YEAR(date) = '$year' AND MONTH(date) = '$month'
-                      GROUP BY WEEK(date, 1) 
+                      sum(case when t.value >= 0 then t.value else 0 end) as total_income,
+                      sum(case when t.value <= 0 then t.value else 0 end) as total_expense
+                      FROM transactions as t inner join category as c on c.category_id = t.category_id
+                      WHERE t.user_id='$userid' AND YEAR(t.date) = '$year' AND MONTH(t.date) = '$month' and c.category_name not in ('Internal Transfer') 
+                      GROUP BY WEEK(t.date, 1) 
                       ORDER BY week ASC";
             break;
     }
