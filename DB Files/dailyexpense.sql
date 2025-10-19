@@ -29,7 +29,7 @@ CREATE TABLE `transactions` (
   `date` date NOT NULL,
   `category_id` int(11) NOT NULL,
   `account_id` INT NOT NULL,
-  `value` int(20) NOT NULL,
+  `value` double not null,
 
   PRIMARY KEY (`transaction_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;

@@ -102,4 +102,8 @@ update `transactions` as t left join (select user_id, account_id from accounts a
 
 ALTER TABLE `transactions` CHANGE `date` `date` DATE NOT NULL;
 
+-- fix value field
+
+ALTER TABLE `transactions` CHANGE `value` `value` DOUBLE NOT NULL;
+
 -- --------------------------------------------------------
