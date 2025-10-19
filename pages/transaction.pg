@@ -1,7 +1,7 @@
 <?php
 
-$start_date = date("Y-m-d",strtotime(date("Y-m-d")) - 60*60*24*7);
-$end_date = date("Y-m-d");
+$start_date = date("Y-m-d",strtotime(date("Y-m-")."01"));
+$end_date = date("Y-m-d",strtotime("+1 month",strtotime(date("Y-m-")."01")) - 60*60*24);
 
 if(isset($_POST['start_date'])) $start_date = $con->real_escape_string($_POST['start_date']);
 if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_date']);
@@ -37,6 +37,8 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
             <table class="table table-hover table-bordered table-sm">
               <thead>
                 <tr class="text-center">
+                  <th>Account Type</th>
+                  <th>Account Name</th>
                   <th>Date</th>
                   <th>Expense Category</th>
                   <th>Amount</th>
@@ -49,10 +51,14 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
               $query = "
                 select
                   t.*,
-                  c.category_name as category
+                  c.category_name as category,
+                  a.account_name as accountname,
+                  at.type_name as accounttype
                 from
                   transactions as t
                   inner join category as c on c.category_id = t.category_id
+                  inner join accounts as a on a.account_id = t.account_id
+                  inner join account_type as at on at.type_id = a.account_type and at.pl=1
                 where
                   t.user_id = '".$userid."'
                   and t.date between '".$start_date."' and '".$end_date."'
@@ -63,6 +69,8 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
               ?>
 
               <tr>
+                <td><?php echo $row['accounttype']; ?></td>
+                <td><?php echo $row['accountname']; ?></td>
                 <td><?php echo $row['date']; ?></td>
                 <td><?php echo $row['category']; ?></td>
                 <td><?php echo $row['value']; ?></td>
