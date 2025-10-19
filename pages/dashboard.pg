@@ -9,30 +9,45 @@ if ($time_period == 'yearly') {
     // Yearly trend data
     $q_exp_line = "SELECT YEAR(date) as period, -SUM(value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 GROUP BY YEAR(date)";
     $q_inc_line = "SELECT YEAR(date) as period, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY YEAR(date)";
+    $q_nw_line = "SELECT period, SUM(value) OVER (
+    	ORDER BY period
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) as total FROM (SELECT YEAR(date) as period, SUM(value) as value FROM transactions WHERE user_id = '$userid' GROUP BY YEAR(date)) as x";
 
     // Yearly category data
-    $q_exp_dc = "SELECT c.category_name as expensecategory, -SUM(t.value) as expense FROM transactions as t left join category as c on c.category_id = t.category_id WHERE t.user_id = '$userid' and t.value <= 0 GROUP BY c.category_name";
-    $q_inc_dc = "SELECT c.category_name as incomecategory, SUM(t.value) as income FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value >= 0 GROUP BY c.category_name";
+    $q_exp_dc = "SELECT c.category_name as expensecategory, -SUM(t.value) as expense FROM transactions as t inner join category as c on c.category_id = t.category_id WHERE t.user_id = '$userid' and t.value <= 0 GROUP BY c.category_name";
+    $q_inc_dc = "SELECT c.category_name as incomecategory, SUM(t.value) as income FROM transactions as t inner join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value >= 0 GROUP BY c.category_name";
+    $q_nw_dc = "SELECT at.type_name as nwcategory, SUM(t.value) as total FROM transactions as t inner join accounts as a on a.account_id = t.account_id inner join account_type as at on at.type_id = a.account_type  WHERE t.user_id = '$userid' GROUP BY at.type_name";
 
 } elseif ($time_period == 'weekly') {
 
     // Weekly trend data
     $q_exp_line = "SELECT CONCAT(YEAR(date), '-W', WEEK(date)) as period, SUM(-value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 GROUP BY YEAR(date), WEEK(date)";
     $q_inc_line = "SELECT CONCAT(YEAR(date), '-W', WEEK(date)) as period, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY YEAR(date), WEEK(date)";
+    $q_nw_line = "SELECT period, SUM(value) OVER (
+    	ORDER BY period
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) as total FROM (SELECT CONCAT(YEAR(date), '-W', WEEK(date)) as period, SUM(value) as value FROM transactions WHERE user_id = '$userid' GROUP BY CONCAT(YEAR(date), '-W', WEEK(date))) as x";
 
     // Weekly category data
-    $q_exp_dc = "SELECT c.category_name as expensecategory, SUM(-t.value) as expense FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value <= 0 AND YEAR(t.date) = YEAR(CURDATE()) AND WEEK(t.date) = WEEK(CURDATE()) GROUP BY c.category_name";
-    $q_inc_dc = "SELECT c.category_name as incomecategory, SUM(t.value) as income FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value >= 0 AND YEAR(t.date) = YEAR(CURDATE()) AND WEEK(t.date) = WEEK(CURDATE()) GROUP BY c.category_name";
+    $q_exp_dc = "SELECT c.category_name as expensecategory, SUM(-t.value) as expense FROM transactions as t inner join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value <= 0 AND YEAR(t.date) = YEAR(CURDATE()) AND WEEK(t.date) = WEEK(CURDATE()) GROUP BY c.category_name";
+    $q_inc_dc = "SELECT c.category_name as incomecategory, SUM(t.value) as income FROM transactions as t inner join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value >= 0 AND YEAR(t.date) = YEAR(CURDATE()) AND WEEK(t.date) = WEEK(CURDATE()) GROUP BY c.category_name";
+    $q_nw_dc = "SELECT at.type_name as nwcategory, SUM(t.value) as total FROM transactions as t inner join accounts as a on a.account_id = t.account_id inner join account_type as at on at.type_id = a.account_type  WHERE t.user_id = '$userid'  AND YEAR(t.date) = YEAR(CURDATE()) AND WEEK(t.date) = WEEK(CURDATE()) GROUP BY at.type_name";
 
 } else {
 
     // Monthly trend data
     $q_exp_line = "SELECT DATE_FORMAT(date, '%Y-%m') as period, SUM(-value) as expense FROM transactions WHERE user_id = '$userid' and value <= 0 GROUP BY DATE_FORMAT(date, '%Y-%m')";
     $q_inc_line = "SELECT DATE_FORMAT(date, '%Y-%m') as period, SUM(value) as income FROM transactions WHERE user_id = '$userid' and value >= 0 GROUP BY DATE_FORMAT(date, '%Y-%m')";
+    $q_nw_line = "SELECT period, SUM(value) OVER (
+    	ORDER BY period
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) as total FROM (SELECT DATE_FORMAT(date, '%Y-%m') as period, SUM(value) as value FROM transactions WHERE user_id = '$userid' GROUP BY DATE_FORMAT(date, '%Y-%m')) as x";
 
     // Monthly category data
-    $q_exp_dc = "SELECT c.category_name as expensecategory, SUM(-t.value) as expense FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value <= 0 AND DATE_FORMAT(t.date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY c.category_name";
-    $q_inc_dc = "SELECT c.category_name as incomecategory, SUM(t.value) as income FROM transactions as t left join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value >= 0 AND DATE_FORMAT(t.date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY c.category_name";
+    $q_exp_dc = "SELECT c.category_name as expensecategory, SUM(-t.value) as expense FROM transactions as t inner join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value <= 0 AND DATE_FORMAT(t.date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY c.category_name";
+    $q_inc_dc = "SELECT c.category_name as incomecategory, SUM(t.value) as income FROM transactions as t inner join category as c on c.category_id = t.category_id  WHERE t.user_id = '$userid' and t.value >= 0 AND DATE_FORMAT(t.date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY c.category_name";
+    $q_nw_dc = "SELECT at.type_name as nwcategory, SUM(t.value) as total FROM transactions as t inner join accounts as a on a.account_id = t.account_id inner join account_type as at on at.type_id = a.account_type  WHERE t.user_id = '$userid' AND DATE_FORMAT(t.date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY at.type_name";
 
 }
 
@@ -44,13 +59,16 @@ if ($time_period == 'yearly') {
     $inc_line = $con->query($q_inc_line);
     $exp_dc = $con->query($q_exp_dc);
     $inc_dc = $con->query($q_inc_dc);
+    $nw_line = $con->query($q_nw_line);
+    $nw_dc = $con->query($q_nw_dc);
 
     // Chart Inputs
 
     ## Expense Lines
 
     $el_label = $el_dataset = $il_label = $il_dataset = 
-    $ec_label = $ec_dataset = $ic_label = $ic_dataset = "";
+    $ec_label = $ec_dataset = $ic_label = $ic_dataset = 
+    $nl_label = $nl_dataset = $nc_label = $nc_dataset = "";
 
     while($el = $exp_line->fetch_assoc()){
       $el_label .=  "\"".$el['period']."\",";
@@ -76,6 +94,27 @@ if ($time_period == 'yearly') {
     while($ic = $inc_dc->fetch_assoc()){
       $ic_label .=  "\"".$ic['incomecategory']."\",";
       $ic_dataset.=  "\"".$ic['income']."\",";
+    }
+
+    ## Income Lines
+
+    while($nl = $inc_line->fetch_assoc()){
+      $nl_label .=  "\"".$nl['period']."\",";
+      $nl_dataset.=  "\"".$nl['total']."\",";
+    }
+
+    ## Net Wealth Line
+
+    while($nc = $nw_line->fetch_assoc()){
+      $nl_label .=  "\"".$nc['period']."\",";
+      $nl_dataset.=  "\"".$nc['total']."\",";
+    }
+    
+    ## Net Wealth Categories
+
+    while($nc = $nw_dc->fetch_assoc()){
+      $nc_label .=  "\"".$nc['nwcategory']."\",";
+      $nc_dataset.=  "\"".$nc['total']."\",";
     }
     
 
@@ -201,6 +240,35 @@ if ($time_period == 'yearly') {
           </div>
         </div>
 
+        <div class="row mt-3">
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Net Wealth Trends</span>
+                
+              </div>
+              <div class="card-body p-2">
+                <div class="chart-container">
+                  <canvas id="netwealth_line"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Net Wealth Categories</span>
+                
+              </div>
+              <div class="card-body p-2">
+                <div class="chart-container">
+                  <canvas id="netwealth_category_pie"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <script>
           // Charts
     document.addEventListener('DOMContentLoaded', function() {
@@ -311,6 +379,69 @@ if ($time_period == 'yearly') {
             labels: [<?php echo $ic_label; ?>],
             datasets: [{
               data: [<?php echo $ic_dataset; ?>],
+              backgroundColor: [
+                '#007bff', '#17a2b8', '#28a745', '#20c997', '#ffc107',
+                '#fd7e14', '#e83e8c', '#6f42c1', '#dc3545', '#6610f2'
+              ],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'right'
+              }
+            }
+          }
+        }
+      );
+
+      // Assets Line Chart
+      var netwealthLine = new Chart(
+        document.getElementById('netwealth_line').getContext('2d'),
+        {
+          type: 'line',
+          data: {
+            labels: [<?php echo $nl_label; ?>],
+            datasets: [{
+              label: 'Net Wealth',
+              data: [<?php echo $nl_dataset; ?>],
+              borderColor: '#28a745',
+              backgroundColor: 'rgba(40, 167, 69, 0.1)',
+              borderWidth: 2,
+              tension: 0.1,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top'
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                Min: 0
+              }
+            }
+          }
+        }
+      );
+      
+      // Net Wealth Category Chart
+      var netwealthCategory = new Chart(
+        document.getElementById('netwealth_category_pie').getContext('2d'),
+        {
+          type: 'doughnut',
+          data: {
+            labels: [<?php echo $nc_label; ?>],
+            datasets: [{
+              data: [<?php echo $nc_dataset; ?>],
               backgroundColor: [
                 '#007bff', '#17a2b8', '#28a745', '#20c997', '#ffc107',
                 '#fd7e14', '#e83e8c', '#6f42c1', '#dc3545', '#6610f2'
