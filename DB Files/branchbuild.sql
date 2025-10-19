@@ -19,32 +19,6 @@
 -- --------------------------------------------------------
 
 --
--- Table structure for table `accounts`
---
-
-CREATE TABLE `accounts` (
-  `account_id` int(11) NOT NULL AUTO_INCREMENT,
-  `account_name` varchar(50) NOT NULL,
-  `account_type` int(11) NOT NULL,
-  `user_id` INT NOT NULL,
-  `active` int(4) NOT NULL DEFAULT 1,
-
-  PRIMARY KEY (`account_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
---
--- Default Account for current transactions
---
-
-insert into accounts (`account_name`,`account_type`,`user_id`,`active`) 
-	select 'Bank Account',
-    (select type_id from account_type where type_name='bank / savings account') as account_type,
-    user_id,
-    1 FROM `users`;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `account_type`
 --
 
@@ -65,10 +39,37 @@ CREATE TABLE `account_type` (
 INSERT INTO `account_type` (`type_name`, `classification`, `pl`) VALUES
 ('Real Estate', 'Asset', 0),
 ('Investment', 'Asset', 0),
-('Bank / Savings Account', 'Equity', 1),
+('Bank Account', 'Equity', 1),
+('Savings Account', 'Equity', 1),
 ('Loan', 'Liability', 0),
 ('Pension', 'Asset', 0),
 ('Credit Card', 'Liability', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accounts`
+--
+
+CREATE TABLE `accounts` (
+  `account_id` int(11) NOT NULL AUTO_INCREMENT,
+  `account_name` varchar(50) NOT NULL,
+  `account_type` int(11) NOT NULL,
+  `user_id` INT NOT NULL,
+  `active` int(4) NOT NULL DEFAULT 1,
+
+  PRIMARY KEY (`account_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Default Account for current transactions
+--
+
+insert into accounts (`account_name`,`account_type`,`user_id`,`active`) 
+	select 'Bank Account',
+    (select type_id from account_type where type_name='bank account') as account_type,
+    user_id,
+    1 FROM `users`;
 
 -- --------------------------------------------------------
 
@@ -95,7 +96,7 @@ ALTER TABLE `transactions` ADD `account_id` INT NOT NULL AFTER `category_id`;
 
 -- Map all transactions to a default bank account
 
-update `transactions` as t left join (select user_id, account_id from accounts as a inner join account_type as t on t.type_id = a.account_type and t.type_name = 'bank / savings account') as a on t.user_id = a.user_id set t.account_id = a.account_id;
+update `transactions` as t left join (select user_id, account_id from accounts as a inner join account_type as t on t.type_id = a.account_type and t.type_name = 'bank account') as a on t.user_id = a.user_id set t.account_id = a.account_id;
 
 -- fix date field
 
