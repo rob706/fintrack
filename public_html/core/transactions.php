@@ -28,6 +28,7 @@ if(!empty($trans_customcategory)){
     }
     $cat = $q_cat->fetch_assoc();
     $trans_category = $cat['category_id'];
+    echo "I've fired";
 } 
 
 $act = $_POST['act'];
@@ -42,7 +43,7 @@ switch($act){
         break;
     
     case 'edit':
-        $sql = "UPDATE transactions SET value='".$trans_amount."', date='".$trans_date."', category_id='".$trans_category."' and account_id='".$trans_account."' WHERE user_id='".$userid."' AND transaction_id='".$id."'";
+        $sql = "UPDATE transactions SET value='".$trans_amount."', date='".$trans_date."', category_id='".$trans_category."', account_id='".$trans_account."' WHERE user_id='".$userid."' AND transaction_id='".$id."'";
         break;
 
     case 'delete':
@@ -57,7 +58,8 @@ if ($con_update->query($sql)) {
     echo "ERROR: Could not able to execute ".$sql."<br />" . $con->error();
 }
 
-#print_r($_POST);
+/*print_r($_POST);
+echo $sql;*/
 
 header("location: /dashboard/".$trans_account."/transaction.htm");
 
