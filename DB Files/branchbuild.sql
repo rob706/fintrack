@@ -106,4 +106,9 @@ ALTER TABLE `transactions` CHANGE `date` `date` DATE NOT NULL;
 
 ALTER TABLE `transactions` CHANGE `value` `value` DOUBLE NOT NULL;
 
+-- add in description and tag fields
+
+ALTER TABLE `transactions` ADD `description` TEXT NULL AFTER `date`;
+ALTER TABLE `transactions` ADD `tags` TEXT NULL AFTER `description`;
+
 -- --------------------------------------------------------

@@ -4,7 +4,7 @@ $act = "";
 $id = 0;
 if(isset($_GET['act'])) $act=$_GET['act'];
 $trans_type = "expense";
-$trans_category = $trans_amount = $trans_account = "";
+$trans_category = $trans_amount = $trans_account = $trans_desc = "";
 $trans_date = date("Y-m-d");
 
 if(isset($_GET['act'])){
@@ -12,10 +12,11 @@ if(isset($_GET['act'])){
   $record = $con->query("SELECT * FROM transactions WHERE user_id='$userid' AND transaction_id=$id");
   if ($record->num_rows == 1) {
       $n = $record->fetch_array();
-      $trans_amount = $n['value'];
-      $trans_date = $n['date'];
-      $trans_category = $n['category_id'];
       $trans_account = $n['account_id'];
+      $trans_amount = $n['value'];
+      $trans_category = $n['category_id'];
+      $trans_date = $n['date'];
+      $trans_desc = $n['description'];
       
       if($trans_amount <= 0){
         $trans_type = "expense";
@@ -94,6 +95,13 @@ switch($act){
                                 <label for="trans_date" class="col-sm-6 col-form-label"><b>Date</b></label>
                                 <div class="col-md-6">
                                     <input type="date" class="form-control col-sm-12" value="<?php echo $trans_date; ?>" name="trans_date" id="trans_date" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="trans_desc" class="col-sm-6 col-form-label"><b>Description</b></label>
+                                <div class="col-md-6">
+                                    <textarea class="form-control col-sm-12" name="trans_desc" id="trans_desc" required><?php echo $trans_desc; ?></textarea>
                                 </div>
                             </div>
 

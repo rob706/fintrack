@@ -27,6 +27,8 @@ CREATE TABLE `transactions` (
   `transaction_id` int(20) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(15) NOT NULL,
   `date` date NOT NULL,
+  `description` TEXT NULL,
+  `tags` TEXT NULL,
   `category_id` int(11) NOT NULL,
   `account_id` INT NOT NULL,
   `value` double not null,

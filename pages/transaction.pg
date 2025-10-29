@@ -39,8 +39,9 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
                 <tr class="text-center">
                   <th>Account Type</th>
                   <th>Account Name</th>
-                  <th>Date</th>
                   <th>Expense Category</th>
+                  <th>Date</th>
+                  <th>Description</th>
                   <th>Amount</th>
                   <th colspan="2">Action</th>
                 </tr>
@@ -71,8 +72,9 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
               <tr>
                 <td><?php echo $row['accounttype']; ?></td>
                 <td><?php echo $row['accountname']; ?></td>
-                <td><?php echo $row['date']; ?></td>
                 <td><?php echo $row['category']; ?></td>
+                <td><?php echo $row['date']; ?></td>
+                <td><?php echo $row['description']; ?></td>
                 <td><?php echo $row['value']; ?></td>
                 <td class="text-center">
                   <a href="/dashboard/transaction/edit/<?php echo $row['transaction_id']; ?>.htm" class="btn btn-primary btn-sm" style="border-radius:0%;">Edit</a>
