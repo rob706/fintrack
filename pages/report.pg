@@ -19,7 +19,7 @@ function generateReport($con, $userid, $period, $year, $month) {
             $query = "SELECT YEAR(date) as year, 
                       sum(case when t.value >= 0 then t.value else 0 end) as total_income,
                       sum(case when t.value <= 0 then t.value else 0 end) as total_expense
-                      FROM transactions as t inner join category as c on c.category_id = t.category_id 
+                      FROM transactions as t inner join category as c on c.category_id = t.category_id inner join accounts as a on a.account_id = t.account_id inner join account_type as at on at.type_id = a.account_type and pl = 1
                       WHERE t.user_id='$userid' and c.category_name not in ('Internal Transfer') 
                       GROUP BY YEAR(t.date) 
                       ORDER BY year ASC";
@@ -30,7 +30,7 @@ function generateReport($con, $userid, $period, $year, $month) {
             $query = "SELECT MONTH(date) as month, 
                       sum(case when t.value >= 0 then t.value else 0 end) as total_income,
                       sum(case when t.value <= 0 then t.value else 0 end) as total_expense
-                      FROM transactions as t inner join category as c on c.category_id = t.category_id 
+                      FROM transactions as t inner join category as c on c.category_id = t.category_id inner join accounts as a on a.account_id = t.account_id inner join account_type as at on at.type_id = a.account_type and pl = 1
                       WHERE t.user_id='$userid' AND YEAR(t.date) = '$year' and c.category_name not in ('Internal Transfer') 
                       GROUP BY MONTH(t.date) 
                       ORDER BY month ASC";
@@ -41,7 +41,7 @@ function generateReport($con, $userid, $period, $year, $month) {
             $query = "SELECT WEEK(date, 1) as week, 
                       sum(case when t.value >= 0 then t.value else 0 end) as total_income,
                       sum(case when t.value <= 0 then t.value else 0 end) as total_expense
-                      FROM transactions as t inner join category as c on c.category_id = t.category_id
+                      FROM transactions as t inner join category as c on c.category_id = t.category_id inner join accounts as a on a.account_id = t.account_id inner join account_type as at on at.type_id = a.account_type and pl = 1
                       WHERE t.user_id='$userid' AND YEAR(t.date) = '$year' AND MONTH(t.date) = '$month' and c.category_name not in ('Internal Transfer') 
                       GROUP BY WEEK(t.date, 1) 
                       ORDER BY week ASC";
