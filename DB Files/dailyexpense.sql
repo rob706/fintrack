@@ -91,7 +91,8 @@ INSERT INTO `category` (`category_name`, `user_id`, `income`, `expense`, `active
 ('Electricity', 0, 0, 1, 1),
 ('Bonus', 0, 1, 0, 1),
 ('Other', 0, 1, 1, 1),
-('Internal Transfer', 0, 1, 1, 1);
+('Internal Transfer', 0, 1, 1, 1),
+('Current Value', 0, 1, 1, 0);
 
 -- --------------------------------------------------------
 

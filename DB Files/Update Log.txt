@@ -164,6 +164,10 @@ Database File Version Log
     INSERT INTO `category` (`category_name`, `user_id`, `income`, `expense`, `active`) VALUES
     ('Internal Transfer', 0, 1, 1, 1);
 
+    -- Add in Additional Category
+
+    INSERT INTO `category` (`category_id`, `category_name`, `user_id`, `income`, `expense`, `active`) VALUES (NULL, 'Current Value', '0', '1', '1', '0');
+
     -- --------------------------------------------------------
 
     --

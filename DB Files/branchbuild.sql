@@ -80,6 +80,10 @@ insert into accounts (`account_name`,`account_type`,`user_id`,`active`)
 INSERT INTO `category` (`category_name`, `user_id`, `income`, `expense`, `active`) VALUES
 ('Internal Transfer', 0, 1, 1, 1);
 
+-- Add additional Category
+
+INSERT INTO `category` (`category_id`, `category_name`, `user_id`, `income`, `expense`, `active`) VALUES (NULL, 'Current Value', '0', '1', '1', '0');
+
 -- --------------------------------------------------------
 
 --
