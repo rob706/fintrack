@@ -33,9 +33,10 @@ RewriteRule ^register.htm?$ register.php [L]
 
 ## Transactions
 
-RewriteRule ^dashboard/transaction/([^/\.]+)/add.htm?$ dashboard.php?pg=manage_transaction&ac=$1[L]
+RewriteRule ^dashboard/transaction/([^/\.]+)/add.htm?$ dashboard.php?pg=manage_transaction&ac=$1 [L]
+RewriteRule ^dashboard/transaction/([^/\.]+)/view.htm?$ dashboard.php?pg=transaction&ac=$1 [L]
 RewriteRule ^dashboard/transaction/([^/\.]+)/([^/\.]+).htm?$ dashboard.php?pg=manage_transaction&act=$1&value=$2 [L]
-RewriteRule ^dashboard/([^/\.]+)/transaction.htm?$ dashboard.php?pg=transaction&value=$1 [L]
+RewriteRule ^dashboard/([^/\.]+)/transactions.htm?$ dashboard.php?pg=transaction&value=$1 [L]
 
 ## Dashboard
 

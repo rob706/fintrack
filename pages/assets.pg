@@ -36,7 +36,7 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
                   <th>Account Name</th>
                   <th>Date</th>
                   <th>Amount</th>
-                  <th colspan="2">Action</th>
+                  <th>Action</th>
                 </tr>
               </thead>
 
@@ -87,10 +87,7 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
                 <td><?php echo $row['date']; ?></td>
                 <td><?php echo $row['value']; ?></td>
                 <td class="text-center">
-                  <a href="/dashboard/transaction/edit/<?php #echo $row['transaction_id']; ?>.htm" class="btn btn-primary btn-sm" style="border-radius:0%;">Edit</a>
-                </td>
-                <td class="text-center">
-                  <a href="/dashboard/transaction/delete/<?php #echo $row['transaction_id']; ?>.htm" class="btn btn-danger btn-sm" style="border-radius:0%;">Delete</a>
+                  <a href="/dashboard/<?php echo $row['account_id']; ?>/transactions.htm" class="btn btn-primary btn-sm" style="border-radius:0%;">View Transactions</a>
                 </td>
               </tr>
               <?php } ?>

@@ -7,7 +7,9 @@ $trans_type = "expense";
 $trans_category = $trans_amount = $trans_account = $trans_desc = "";
 $trans_date = date("Y-m-d");
 
-if(isset($_GET['act'])){
+if(isset($_GET['ac'])) $trans_account=$con->real_escape_string($_GET['ac']);
+
+if(isset($_GET['value'])){
   $id = $con->real_escape_string($_GET['value']);
   $record = $con->query("SELECT * FROM transactions WHERE user_id='$userid' AND transaction_id=$id");
   if ($record->num_rows == 1) {
@@ -33,7 +35,18 @@ if(isset($_GET['act'])){
 
 $q_cat = $con->query("select category_id, category_name from category where user_id in (0,".$userid.") and ".$trans_type." = 1 and active = 1 order by category_name");
 
-$q_accounts = $con->query("select a.account_id, a.account_name from accounts as a inner join account_type as at on a.account_type = at.type_id where user_id = ".$userid." and at.pl = 1 order by account_name");
+$acc = " and at.pl = 1";
+
+if($trans_account != "new"){
+    $acc = " and a.account_id = ".$trans_account;
+}
+
+$q_accounts = $con->query("select a.account_id, a.account_name from accounts as a inner join account_type as at on a.account_type = at.type_id where user_id = ".$userid."".$acc." order by account_name");
+
+if($q_accounts->num_rows == 0){
+    header("location: /dashboard/");
+    exit();
+}
 
 $q_oth = $con->query("select category_id, category_name from category where category_name='Other' and active = 1 order by category_name");
 
@@ -68,6 +81,9 @@ switch($act){
                             <div class="form-group row">
                                 <label for="trans_account" class="col-sm-6 col-form-label"><b>Account</b></label>
                                 <div class="col-md">
+                                    <?php
+                                    if($trans_account == "new"){
+                                    ?>
                                     <!-- Dropdown Menu -->
                                     <select id="accountDropdown" name="trans_account" class="form-control">
                                         <?php
@@ -78,6 +94,12 @@ switch($act){
                                             }
                                         ?>
                                     </select>
+                                    <?php
+                                    } else {
+                                        $cat = $q_accounts->fetch_assoc();
+                                        echo $cat['account_name'];
+                                    }
+                                    ?>
                                 </div>
                             </div>
 

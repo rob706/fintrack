@@ -5,6 +5,7 @@ $end_date = date("Y-m-d",strtotime("+1 month",strtotime(date("Y-m-")."01")) - 60
 
 if(isset($_POST['start_date'])) $start_date = $con->real_escape_string($_POST['start_date']);
 if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_date']);
+if(isset($_GET['value'])) $trans_account = $con->real_escape_string($_GET['value']);
 
 ?>
 
@@ -27,6 +28,11 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
                 <div class="col">
                   <button type="submit" class="btn btn-primary btn-block">Filter</button>
                 </div>
+                <?php
+                  if(isset($trans_account)){
+                      echo "<div class=\"col\"><a href=\"/dashboard/transaction/".$trans_account."/add.htm\" class=\"btn btn-primary btn-block\" style=\"border-radius:0%;\">Add Transaction</a></div>";
+                  }
+                ?>
               </div>
             </form>
           </div>
@@ -48,6 +54,11 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
               </thead>
 
               <?php
+              $acc = " and at.pl=1";
+              if(isset($_GET['value'])){
+                
+                $acc = " and a.account_id=".$trans_account;
+              }              
               // Modify the query to include date filtering
               $query = "
                 select
@@ -59,7 +70,7 @@ if(isset($_POST['end_date'])) $end_date = $con->real_escape_string($_POST['end_d
                   transactions as t
                   inner join category as c on c.category_id = t.category_id
                   inner join accounts as a on a.account_id = t.account_id
-                  inner join account_type as at on at.type_id = a.account_type and at.pl=1
+                  inner join account_type as at on at.type_id = a.account_type".$acc."
                 where
                   t.user_id = '".$userid."'
                   and t.date between '".$start_date."' and '".$end_date."'
