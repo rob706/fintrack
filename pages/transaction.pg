@@ -16,7 +16,7 @@ if(isset($_GET['value'])) $trans_account = $con->real_escape_string($_GET['value
         
         <!-- Date Filter Form -->
         <div class="row justify-content-center mb-4">
-          <div class="col-md-6">
+          <div class="col-md-8">
             <form method="POST" action="">
               <div class="form-row">
                 <div class="col">
@@ -30,7 +30,7 @@ if(isset($_GET['value'])) $trans_account = $con->real_escape_string($_GET['value
                 </div>
                 <?php
                   if(isset($trans_account)){
-                      echo "<div class=\"col\"><a href=\"/dashboard/transaction/".$trans_account."/add.htm\" class=\"btn btn-primary btn-block\" style=\"border-radius:0%;\">Add Transaction</a></div>";
+                      echo "<div class=\"col\"><a href=\"/dashboard/transaction/".$trans_account."/add.htm\" class=\"btn btn-primary btn-block\">Add Transaction</a></div>";
                   }
                 ?>
               </div>
